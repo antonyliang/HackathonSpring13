@@ -72,8 +72,8 @@ def move():
 def calcDemand(region):
     global Demand
     temp = 0
-    for i in Demand:
-        temp = i[region]
+    for i in range(0, len(Demand)):
+        temp = Demand[i][region]
     return 20
 
 #parses demand data and stores it in global Demand
@@ -84,16 +84,17 @@ def parseDemand(data):
     demand.pop(0)
     #if the length of Demand is > threshold, pop off the oldest data point
     if(len(Demand) >= 5):
-#        demandKeys = sorted(Demand.keys())
-#        Demand.pop(demandKeys[0])
         Demand.pop(0)
-#    Demand[str(demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3])] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]} 
-    Demand[len(Demand)] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}  
+        Demand[0] = Demand[1]
+        Demand[1] = Demand[2]
+        Demand[2] = Demand[3]
+        Demand[3] = Demand[4]
+        Demand[4] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}
+    else:
+        Demand[len(Demand)] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}  
        
 #Pretty prints Demand
 def printDemand():
-#    for i in range (0,len(Demand),2):
-#        print str(Demand[i]) + "\t" + str(Demand[i+1])
     demandKeys = sorted(Demand.keys())
     for i in range (0, len(demandKeys)):
         print str(demandKeys[i]) + ": " + str(Demand[demandKeys[i]])
@@ -135,10 +136,10 @@ def main():
     data = ""
 
 #    while (data != "END"):
-    for i in xrange(0,6):
+    for i in xrange(0,10):
         printAllConfig()
         s.send("RECD")
-        #DATA
+        #DEMAND
         data = s.recv(1024)
         print data
         parseDemand(data)
@@ -159,9 +160,6 @@ def main():
         parseConfig(data)
     s.send("STOP")
     s.close()
-    printDemand()
 main()
-print Demand[2]["NA"]
-
 
 print "\nENDED"
