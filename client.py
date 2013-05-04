@@ -63,9 +63,9 @@ def move():
     currentCapED = float(Config["D.eu"] * 1100)
     currentCapAD = float(Config["D.ap"] * 1100)
 
-    projND = 176#calcDemand("NA")
-    projED = 248#calcDemand("EU")
-    projAD = 621#calcDemand("AP")
+    projND = calcDemand("NA")
+    projED = calcDemand("EU")
+    projAD = calcDemand("AP")
 
     control = []
     #W.na
@@ -83,6 +83,7 @@ def move():
 
 def calcDemand(region):
     global Demand
+    #doesn't start considering until we have at least 3 points
     if(len(Demand) < 3):
         return Demand[len(Demand) - 1][region]
 
@@ -97,8 +98,45 @@ def calcDemand(region):
         dx2 = Demand[i][region] - Demand[i - 1][region]
         if(dx > dx2):
             if(trend != "up"):
-                return 30
-    return 20
+                return changeDemand(i, trend, region)
+        if(dx < dx2):
+            if(trend != "down"):
+                return changeDemand(i, trend, region)
+
+    return changeDemand(i, trend)
+
+def changeDemand(i, trend, region):
+    
+    current = Demand[len(Demand) - 1][region]
+    dx = Demand[len(Demand) - 1][region] - Demand[len(Demand) - 2][region]
+    dx2 = Demand[len(Demand) - 2][region] - Demand[len(Demand) - 3][region]
+
+    if(dx * dx2 < 0 and abs(dx) > 90):
+        if(dx > 0):
+            return current + int(1.125 * dx)
+        else:
+            return current - int(1.125 * dx)
+
+    if(i == 1):
+        return current
+
+    if(i == 2):
+        if(trend == "up"):
+            return current + int(1.125 * dx)
+        else:
+            return current - int(1.125 * dx)
+
+    if(i == 3):
+        if(trend == "up"):
+            return current + int(1.25 * dx)
+        else:
+            return current - int(1.25 * dx)
+
+    if(i == 4):
+        if(trend == "up"):
+            return current + int(1.5 * dx)
+        else:
+            return current - int(1.5 * dx)
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
