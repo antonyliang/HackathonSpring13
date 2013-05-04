@@ -8,9 +8,12 @@ W_cost = 0
 J_cost = 0
 D_cost = 0
 
-goingDownWeb = []
-goingDownJava = []
-goingDownData = []
+goingDownJava = {}
+goingDownData = {}
+
+goingUpWeb = {}
+goingUpJava = {}
+goingUpData = {}
 
 Demand = {}
 Config = {}
@@ -21,6 +24,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #creates a connection to the game server and starts the game
 def init():
+    initArrays()
     global s
     s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
@@ -33,6 +37,49 @@ def init():
     s.send("START")
     data = s.recv(1024)
     return data
+
+def initArrays():
+    global goingDownJava
+    global goingDownData
+
+    global goingUpWeb
+    global goingUpJava
+    global goingUpData
+
+    goingDownJava["NA"] = []
+    goingDownJava["EU"] = []
+    goingDownJava["AP"] = []
+    for i in goingDownJava:
+        goingDownJava[i].append(0)
+        goingDownJava[i].append(0)
+
+    goingUpWeb["NA"] = []
+    goingUpWeb["EU"] = []
+    goingUpWeb["AP"] = []
+    goingDownData["NA"] = []
+    goingDownData["EU"] = []
+    goingDownData["AP"] = []
+
+    for i in goingUpWeb:
+        for j in range(0,3):
+            goingUpWeb[i].append(0)
+            goingDownData[i].append(0)
+
+    goingUpJava["NA"] = []
+    goingUpJava["EU"] = []
+    goingUpJava["AP"] = []
+
+    for i in goingUpJava:
+        for j in range(0,5):
+            goingUpJava[i].append(0)
+
+    goingUpData["NA"] = []
+    goingUpData["EU"] = []
+    goingUpData["AP"] = []
+
+    for i in goingUpData:
+        for j in xrange(0,9):
+            goingUpData[i].append(0)
 
 #parses cost data and stores it in the respective globals
 def parseCost(data):
@@ -95,9 +142,6 @@ def move():
         val += " "
         val += str(control[i])
         #val += str(0)
-    print val
-    return val
-    #print "CURRENT i: " + str(i) + " " + val
     print val
     return val
 
