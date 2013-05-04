@@ -16,6 +16,9 @@ goingUpJava = {}
 goingUpData = {}
 
 Demand = {}
+DistW = {}
+DistJ = {}
+DistD ={}
 ConfigW = {}
 ConfigJ = {}
 ConfigD = {}
@@ -276,21 +279,39 @@ def changeDemand(i, trend, region):
 
     if(i == 2):
         if(trend == "up"):
-            return current + int(1.125 * dx)
+            if(dx > 0):
+                return current + int(1.125 * dx)
+            else:
+                return current - int(.5 * dx)
         else:
-            return current - int(1.125 * dx)
+            if (dx < 0):
+                return current - int(1.125 * dx)
+            else:
+                return current + int(.5 * dx)
 
     if(i == 3):
         if(trend == "up"):
-            return current + int(1.25 * dx)
+            if(dx > 0):
+                return current + int(1.25 * dx)
+            else:
+                return current - int(.25 * dx)
         else:
-            return current - int(1.25 * dx)
+            if(dx < 0):
+                return current - int(1.25 * dx)
+            else:
+                return current + int(.25 * dx)
 
     if(i == 4):
         if(trend == "up"):
-            return current + int(1.5 * dx)
+            if(dx > 0):
+                return current + int(1.5 * dx)
+            else:
+                return current - (.125 * dx)
         else:
-            return current - int(1.5 * dx)
+            if (dx < 0 ):
+                return current - int(1.5 * dx)
+            else:
+                return current + int(.125 * dx)
 
 #Decisions on Web Servers
 def webLogic(proj, cap, region):
@@ -315,6 +336,10 @@ def javaLogic(proj, cap, region):
     global goingUpJava
     global goingDownJava
     global ConfigJ
+    global DistJ
+
+    if(DistJ[region] >  0 and ConfigJ[region] == 0):
+        return 1
 
     val = int(math.ceil(proj - cap)/450)
     if (ConfigJ[region] + val <= 0):
@@ -334,7 +359,13 @@ def dataLogic(proj, cap, region):
     global goingDownData
     global ConfigD
 
-    val = int(math.ceil(proj - cap)/1100)
+    current = (proj - cap)/1100.0
+    if (current > 0.7):
+        val = int(math.ceil(current))
+    else:
+        val = int(math.floor(current))
+
+
     if(ConfigD[region] + val <= 0):
         return 0
 
@@ -368,6 +399,25 @@ def printDemand():
         print str(i) + ": { NA: " + str(Demand[i]["NA"]) + " EU: " + str(Demand[i]["EU"]) + " AP: " + str(Demand[i]["AP"]) + " }"
 
     print "length: " + str(len(Demand))
+
+#Parse Distribution
+def parseDist(data):
+    global DistW
+    global DistJ
+    global DistD
+
+    dist = data.split()
+    dist.pop(0)
+    DistW["NA"] = int(dist[0])
+    DistW["EU"] = int(dist[1])
+    DistW["AP"] = int(dist[2])
+    DistJ["NA"] = int(dist[3])
+    DistJ["EU"] = int(dist[4])
+    DistJ["AP"] = int(dist[5])
+    DistD["NA"] = int(dist[6])
+    DistD["EU"] = int(dist[7])
+    DistD["AP"] = int(dist[8])
+
 
 #Stores our current number of servers in each region into Config
 def parseConfig(data):
@@ -428,6 +478,7 @@ def main():
         #DIST
         data = s.recv(1024)
         print data
+        parseDist(data)
         s.send("RECD")
         #PROFIT
         data = s.recv(1024)
