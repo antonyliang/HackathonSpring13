@@ -1,6 +1,7 @@
 #Team Midas
 import socket
 import math
+import operator
 
 #Globals
 Revenue = 0
@@ -31,7 +32,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27832))
+    s.connect(("hackathon.hopto.org", 27833))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -132,6 +133,8 @@ def passArrayTime():
 
         for j in range(1,len(goingDownJava[i])):
             goingDownJava[i][j-1] = goingDownJava[i][j]
+            if (i == 1 or i == 2):
+                ConfigJ[i] = ConfigJ[i] - goingDownJava[i][0]
             goingDownJava[i][j] = 0
 
         if (goingDownData[i][0] > 0):
@@ -140,6 +143,7 @@ def passArrayTime():
 
         for j in range(1,len(goingDownData[i])):
             goingDownData[i][j-1] = goingDownData[i][j]
+            ConfigD[i] = ConfigD[i] - goingDownData[i][0]
             goingDownData[i][j] = 0
 
         if (goingUpWeb[i][0] > 0):
@@ -148,6 +152,7 @@ def passArrayTime():
 
         for j in range(1,len(goingUpWeb[i])):
             goingUpWeb[i][j-1] = goingUpWeb[i][j]
+  #          ConfigW[i] = ConfigW[i] + goingUpWeb[i][0]
             goingUpWeb[i][j] = 0
 
         if (goingUpJava[i][0] > 0):
@@ -156,6 +161,8 @@ def passArrayTime():
 
         for j in range(1,len(goingUpJava[i])):
             goingUpJava[i][j-1] = goingUpJava[i][j]
+            if (i == 1 or i == 2):
+                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][0]
             goingUpJava[i][j] = 0
 
         if (goingUpData[i][0] > 0):
@@ -164,7 +171,9 @@ def passArrayTime():
 
         for j in range(1,len(goingUpData[i])):
             goingUpData[i][j-1] = goingUpData[i][j]
+            ConfigD[i] = ConfigD[i] + goingUpData[i][0]
             goingUpData[i][j] = 0
+    printArrays()
 
 #parses cost data and stores it in the respective globals
 def parseCost(data):
@@ -339,26 +348,7 @@ def javaLogic(proj, cap, region):
     global ConfigJ
     global DistJ
 
-    if(DistJ[region] >  0 and ConfigJ[region] == 0):
-        goingUpJava[region][2] = 1
-        return 1
-
-    #Weigh servers vs overflow
-
-    overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.8)}
-    overflow = Revenue*overflowRatio[region][1]*(proj - cap)
-    addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
-
-#    print str(proj-cap)
-    print str(region)
-    print "overflow: " + str(overflow)
-    print "addServer: " + str(addServer)
-
-    if(addServer < overflow):
-        val = int(math.ceil(proj - cap)/450)
-    else:
-        val = 0
-
+    val = int(math.ceil(proj - cap)/450)
     if (ConfigJ[region] + val <= 0):
         return 0
 
@@ -377,14 +367,26 @@ def dataLogic(projN, projE, projA):
     global ConfigD
     global DistD
     global Demand
-    totalProjected = projN + projE + projA
-    #totalDemand = Demand[length - 1]["NA"] + Demand[length - 1]["EU"] + Demand[length - 1]["AP"]
-    currentCap = (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200
-    if(currentCap < totalProjected):
-        if((totalProjected - currentCap) > (Revenue / D_Cost)):
-            location = "NA"
 
-    return "0 0 0"
+    val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
+    negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
+    projections = {"NA": projN, "EU": projE, "AP": projA}
+    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 200 >  projN + projE + projA):
+        locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
+        currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
+        locations[currentKey]
+        goingUpData[currentKey][8] = 1
+        return val[currentKey]
+    else:
+        if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
+            return "0 0 0"
+        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 600 <  projN + projE + projA):
+            locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
+            currentKey = max(locations.iteritems(), key=operator.itemgetter(1))[0]
+            locations[currentKey]
+            goingDownData[currentKey][2] = 1
+            return negval[currentKey]
+
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
@@ -503,7 +505,7 @@ def main():
         print ""
         #CONFIG
         data = s.recv(1024)
-        #print data
+        print data
         if(endnum <= 2880 and i > endnum):
             endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
             print "CURRENT ENDNUM"
