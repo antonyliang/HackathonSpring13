@@ -298,7 +298,7 @@ def javaLogic(proj, cap, region):
     addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
 
 #    print str(proj-cap)
-#   print str(region)
+#    print str(region)
     print "overflow: " + str(overflow)
     print "addServer: " + str(addServer)
 
@@ -327,7 +327,7 @@ def dataLogic(proj, cap, region):
     #Weigh servers vs overflow
     overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.9)}
     overflow = Revenue*overflowRatio[region][1]*(proj - cap)
-    addServer = Revenue*(proj - cap) - (D_cost + (1*D_cost))
+    addServer = Revenue*(proj - cap) - (D_cost + (2*D_cost))
     if(addServer < overflow):
         val = int(math.ceil(proj - cap)/1100)
     else:
