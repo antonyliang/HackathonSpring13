@@ -73,10 +73,12 @@ def parseDemand(data):
     demand.pop(0)
     #if the length of Demand is > threshold, pop off the oldest data point
     if(len(Demand) >= 5):
-        demandKeys = sorted(Demand.keys())
-        Demand.pop(demandKeys[0])
-    Demand[str(demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3])] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]} 
-        
+#        demandKeys = sorted(Demand.keys())
+#        Demand.pop(demandKeys[0])
+        Demand.pop(0)
+#    Demand[str(demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3])] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]} 
+    Demand[len(Demand)] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}  
+       
 #Pretty prints Demand
 def printDemand():
 #    for i in range (0,len(Demand),2):
@@ -148,5 +150,7 @@ def main():
     s.close()
     printDemand()
 main()
+print Demand[2]["NA"]
+
 
 print "\nENDED"
