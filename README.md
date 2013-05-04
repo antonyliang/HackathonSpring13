@@ -1,3 +1,4 @@
 HackathonSpring13
 =================
-blah
+Properly set up your fork
+http://stackoverflow.com/questions/7244321/how-to-update-github-forked-repository
