@@ -71,9 +71,21 @@ def move():
 
 def calcDemand(region):
     global Demand
-    temp = 0
-    for i in range(0, len(Demand)):
-        temp = Demand[i][region]
+    if(len(Demand) < 3):
+        return Demand[len(Demand) - 1][region]
+
+    i = 0
+    dx = Demand[len(Demand) - 1][region] - Demand[len(Demand) - 2][region]
+    if(dx > 0):
+        trend = "up"
+    else:
+        trend = "down"
+    for m in xrange(len(Demand) - 2, 1, -1):
+        i = i+1
+        dx2 = Demand[i][region] - Demand[i - 1][region]
+        if(dx > dx2):
+            if(trend != "up"):
+                return 30
     return 20
 
 #parses demand data and stores it in global Demand
