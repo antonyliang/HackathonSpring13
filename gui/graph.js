@@ -15,11 +15,12 @@ var plots = new Array();
 var data = new Array();
 for(var i = 0; i < 10; i = i + 1) {
     lines[i] = new Array();
-}
+ }
 for(var i = 0; i < 13; i = i + 1) {
 
     lines[i] = {show: true};
     plots[i] = {show: true};
+    data[i] = new Array();
 
 }
 
@@ -35,11 +36,11 @@ function update_data (index, dat) {
 }
 
 function update_fromfile () {
-    var xaxisCounter = 0;
-    for(var i = 0; i < control.stats.length; i = i + 1) {
-        data[i] = [xaxisCounter, control.stats[i]];
-        xaxisCounter = xaxisCounter + 1;
+    for(var i in data) {
+        alert(control.stats[i]);
+        data[i].push([control.xaxisv, control.stats[i]]);
     }
+    control.xaxisv += 30;
 }
 
 

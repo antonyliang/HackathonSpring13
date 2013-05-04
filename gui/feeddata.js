@@ -2,7 +2,7 @@ var dat  = new Array();
 
 
 $(document).ready(function () {
-    
+/*    
     dat = [ [0, 0], [1,14], [2, 8], [3, 6]];
     update_data(1, [[0,0], [1,16], [2, 16], [3, 16]]);
     update_data(2, dat);
@@ -19,5 +19,11 @@ $(document).ready(function () {
     draw_graph();
     set_visible(0, false);
     set_visible(1, false);
+    */
+
+    update_fromfile();
+    draw_graph();
+    alert(data[0]);
+    
 }
                  );
