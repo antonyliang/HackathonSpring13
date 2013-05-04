@@ -45,9 +45,9 @@ function set_visible(index, yesorno) {
 
     draw_graph();
 }
-alert("Now instantiating graph");
-alert("value of file:" + file);
-alert("This is control " + control);
+//alert("Now instantiating graph");
+//alert("value of file:" + file);
+//alert("This is control " + control);
 function draw_graph() {
     $.plot (
         $("#placeholder"),

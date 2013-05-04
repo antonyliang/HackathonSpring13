@@ -9,5 +9,4 @@ function read_file () {
             file = data;
         }
     })
-    alert("this is the file: " + file);
     return file;};

@@ -2,7 +2,7 @@
 
 var Input = function (input) {
     this.file=input;//stores the file with the information
-    alert(this.file);
+    //    alert(this.file);
     this.line = 0; //stores the position in the file
     this.stats = this.file.split("\n");  //the array of elements split by newline
     this.toString = function () {
