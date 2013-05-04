@@ -28,7 +28,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -146,7 +146,7 @@ def parseCost(data):
     global J_cost
     global D_cost
     cost = data.split()
-    Revenue = int(cost[1])
+    Revenue = float(cost[1])/100
     W_cost = int(cost[2])
     J_cost = int(cost[3])
     D_cost = int(cost[4])
@@ -292,7 +292,21 @@ def javaLogic(proj, cap, region):
     global goingDownJava
     global ConfigJ
 
-    val = int(math.ceil(proj - cap)/450)
+    #Weigh servers vs overflow
+    overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.8)}
+    overflow = Revenue*overflowRatio[region][1]*(proj - cap)
+    addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
+
+#    print str(proj-cap)
+#   print str(region)
+    print "overflow: " + str(overflow)
+    print "addServer: " + str(addServer)
+
+    if(addServer < overflow):
+        val = int(math.ceil(proj - cap)/450)
+    else:
+        val = 0
+
     if (ConfigJ[region] + val <= 0):
         return 0
 
@@ -310,7 +324,16 @@ def dataLogic(proj, cap, region):
     global goingDownData
     global ConfigD
 
-    val = int(math.ceil(proj - cap)/1100)
+    #Weigh servers vs overflow
+    overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.9)}
+    overflow = Revenue*overflowRatio[region][1]*(proj - cap)
+    addServer = Revenue*(proj - cap) - (D_cost + (1*D_cost))
+    if(addServer < overflow):
+        val = int(math.ceil(proj - cap)/1100)
+    else:
+        val = 0
+
+#    val = int(math.ceil(proj - cap)/1100)
     if(ConfigD[region] + val <= 0):
         return 0
 
