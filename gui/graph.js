@@ -36,9 +36,10 @@ function update_data (index, dat) {
 }
 
 function update_fromfile () {
-    var splitdata = control.lines[control.linepos].split(","); //splits current line into comma split array of ints
+    var splitdata;
     var isRunning = true;
     while(control.linepos < control.lines.length) {
+        splitdata = control.lines[control.linepos].split(","); //splits current line into comma split array of ints
         if(splitdata[0] === "STOP") {
             return false;
         }

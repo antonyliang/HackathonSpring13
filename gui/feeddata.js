@@ -23,7 +23,11 @@ $(document).ready(function () {
     while(update_fromfile()) {
         draw_graph();
         alert(data[0]);
-        control.file = read_file();
+        var fi = read_file();
+        if(fi != undefined) {
+            alert(fi);
+            control.file = fi;
+        }
     }
     
 }
