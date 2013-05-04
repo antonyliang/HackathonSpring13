@@ -8,6 +8,7 @@ J_cost = 0
 D_cost = 0
 
 Demand = []
+Config = {}
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -55,16 +56,47 @@ def parseDemand(data):
     Demand.append(("Date", demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3]))
     Demand.append(("Demand", ("NA", demand[4]), ("EU", demand[5]), ("AP", demand[6])))
 
-#pretty prints Demand
+#Pretty prints Demand
 def printDemand():
     for i in range (0,len(Demand),2):
         print str(Demand[i]) + "\t" + str(Demand[i+1])
+
+#Stores our current number of servers in each region into Config
+def parseConfig(data):
+    global Config
+    config = data.split()
+    config.pop(0)
+    Config["W.na"] = config[0]
+    Config["W.eu"] = config[1]
+    Config["W.ap"] = config[2]
+    Config["J.na"] = config[3]
+    Config["J.eu"] = config[4]
+    Config["J.ap"] = config[5]
+    Config["D.na"] = config[6]
+    Config["D.eu"] = config[7]
+    Config["D.ap"] = config[8]
+    
+
+#Pretty prints a key-value pair in Config
+#x is the tier.region you're looking for
+#e.g. printConfig("W.na") prints the number of servers in the Web tier of North America
+#case-sensitive
+def printConfig(x):
+    print x + ": " + Config[x]
+
+#Pretty prints all key-value pairs in Config
+def printAllConfig():
+    configKeys = sorted(Config.keys())
+    configKeys.reverse()
+    for i in range(0,len(configKeys),3):
+        print configKeys[i] + ": " + Config[configKeys[i]] + " \t" + configKeys[i+1] + ": " + Config[configKeys[i+1]] + " \t" + configKeys[i+2] + ": " + Config[configKeys[i+2]]
+
 
 def main():
     init()
     data = ""
 #    while (data != "END"):
-    for i in xrange(0,20):
+    for i in xrange(0,2):
         s.send("RECD")
         #DATA
         data = s.recv(1024)
@@ -83,10 +115,11 @@ def main():
         #CONFIG
         data = s.recv(1024)
         print data
+        parseConfig(data)
     s.send("STOP")
     s.close()
 
 main()
-
+printAllConfig()
 
 print "\nENDED"
