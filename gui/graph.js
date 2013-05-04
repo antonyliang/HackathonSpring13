@@ -8,6 +8,7 @@
 
 
 //trying to establish dynamic graph, making parameters into vars themselves
+var file;
 var lines = new Array();
 var plots = new Array();
 var data = new Array();
@@ -20,10 +21,11 @@ for(var i = 0; i < 13; i = i + 1) {
     plots[i] = {show: true};
 
 }
-//$(document).ready( function () {
-  //  draw_graph();
-//}
-                 //);
+$(document).ready( function () {
+    // draw_graph();
+        file = read_file();
+}
+                 );
 function update_data (index, dat) {
     data[index] = dat;
 }
@@ -40,8 +42,10 @@ function set_visible(index, yesorno) {
     draw_graph();
 }
 alert("Now instantiating graph");
-var control = new Input();
+file = read_file();
+var control = new Input(file);
 alert("This is control " + control);
+alert("finished");
 function draw_graph() {
     $.plot (
         $("#placeholder"),
