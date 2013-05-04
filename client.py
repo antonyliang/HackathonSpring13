@@ -22,6 +22,7 @@ DistD ={}
 ConfigW = {}
 ConfigJ = {}
 ConfigD = {}
+demandArray = {}
 
 foo = []
 
@@ -31,7 +32,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -188,6 +189,7 @@ def move():
     global J_cost
     global D_cost
     global Demand
+    global demandArray
     global ConfigW
     global ConfigJ
     global ConfigD
@@ -202,17 +204,29 @@ def move():
     currentCapED = float(ConfigD["EU"] * 1100)
     currentCapAD = float(ConfigD["AP"] * 1100)
 
-    projND = calcDemand("NA")
-    projED = calcDemand("EU")
-    projAD = calcDemand("AP")
+    projND = calcDemand("NA",Demand)
+    projED = calcDemand("EU",Demand)
+    projAD = calcDemand("AP",Demand)
+
+    projND2 = 0;
+    projED2 = 0;
+    projAD2 = 0;
+
+    #creates an array with the tail of Demand with the 3 projected demands appended to the end
+    if(len(Demand) == 6):
+        demandArray = projDemand(projND,projED,projAD)
+        
+        projND2 = calcDemand("NA",demandArray)
+        projED2 = calcDemand("EU",demandArray)
+        projAD2 = calcDemand("AP",demandArray)
 
     control = []
     #Web NA
-    control.append(webLogic(projND, currentCapNW, "NA"))
+    control.append(webLogic(projND, projND2, currentCapNW, "NA"))
     #Web EU
-    control.append(webLogic(projED, currentCapEW, "EU"))
+    control.append(webLogic(projED, projED2, currentCapEW, "EU"))
     #Web AP
-    control.append(webLogic(projAD, currentCapAW, "AP"))
+    control.append(webLogic(projAD, projAD2, currentCapAW, "AP"))
     #Java NA
     control.append(javaLogic(projND, currentCapNJ, "NA"))
     #Java EU
@@ -235,24 +249,34 @@ def move():
     print val
     return val
 
+#adds projected values into a copy of Demand called demandArray
+def projDemand(projND,projED,projAD):
+    global demandArray
+    global Demand
+    for i in range (5):
+        demandArray[i] = Demand[i+1]
+    demandArray[5] = {"NA": projND, "EU": projED, "AP": projAD}
+#    print "demandArray: " + str(demandArray)
+    return demandArray
 
 #calculates potential Damand change
 #detects the trend by looking how long we have been rising or falling
-def calcDemand(region):
+def calcDemand(region,projDemand):
     global Demand
+    global demandArray
     #doesn't start considering until we have at least 3 points
-    if(len(Demand) < 3):
-        return Demand[len(Demand) - 1][region]
+    if(len(projDemand) < 3):
+        return projDemand[len(projDemand) - 1][region]
 
     i = 0
-    dx = Demand[len(Demand) - 1][region] - Demand[len(Demand) - 2][region]
+    dx = projDemand[len(projDemand) - 1][region] - projDemand[len(projDemand) - 2][region]
     if(dx > 0):
         trend = "up"
     else:
         trend = "down"
-    for m in xrange(len(Demand) - 2, 0, -1):
+    for m in xrange(len(projDemand) - 2, 0, -1):
         i = i+1
-        dx2 = Demand[i][region] - Demand[i - 1][region]
+        dx2 = projDemand[i][region] - projDemand[i - 1][region]
         if(dx > dx2):
             if(trend != "up"):
                 return changeDemand(i, trend, region)
@@ -261,6 +285,7 @@ def calcDemand(region):
                 return changeDemand(i, trend, region)
 
     return changeDemand(i, trend, region)
+
 
 #does the math for calcDemand
 def changeDemand(i, trend, region):
@@ -315,7 +340,7 @@ def changeDemand(i, trend, region):
                 return current + int(.125 * dx)
 
 #Decisions on Web Servers
-def webLogic(proj, cap, region):
+def webLogic(proj, proj2, cap, region):
     global Revenue
     global W_cost
     global goingUpWeb
@@ -386,7 +411,7 @@ def dataLogic(proj, cap, region):
         goingUpData[region][8] = val
         return 1
 
-    if(DistD["NA"]+DistD["EU"]+DistD["AP"])
+#    if(DistD["NA"]+DistD["EU"]+DistD["AP"])
 
     current = (proj - cap)/1100.0
     if (current > 0.7):
