@@ -39,7 +39,9 @@ function set_visible(index, yesorno) {
 
     draw_graph();
 }
+alert("Now instantiating graph");
 var control = new Input();
+alert("This is control " + control);
 function draw_graph() {
     $.plot (
         $("#placeholder"),
