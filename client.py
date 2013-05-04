@@ -43,6 +43,12 @@ def parseCost(data):
     print "Data " + str(D_cost)
 
 def move():
+    global Revenue
+    global W_cost
+    global J_cost
+    global D_cost
+    global Demand
+
     if (True):
         return "CONTROL 0 0 0 0 0 0 0 0 0"
 
