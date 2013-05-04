@@ -49,7 +49,11 @@ def parseDemand(data):
     global Demand
     demand = data.split()
     demand.pop(0)
-    Demand.append(demand)
+    Demand.append(("Date", demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3]))
+    Demand.append(("Demand", ("NA", demand[4]), ("EU", demand[5]), ("AP", demand[6])))
+#    print "Demand: " + str(Demand)
+
+
 
 #while (data != "END"):
 def main():
