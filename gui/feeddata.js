@@ -23,6 +23,7 @@ $(document).ready(function () {
     while(update_fromfile()) {
         draw_graph();
         alert(data[0]);
+        sleep(20);
         var fi = read_file();
         if(fi != undefined) {
             alert(fi);
