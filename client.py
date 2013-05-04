@@ -65,7 +65,7 @@ def move():
     projND = calcDemand("NA")
     projED = calcDemand("EU")
     projAD = calcDemand("AP")
-    
+
     if (True):
         return "CONTROL 0 0 0 0 0 0 0 0 0"
 
@@ -74,6 +74,7 @@ def calcDemand(region):
     temp = 0
     for i in Demand:
         temp = i[region]
+    return 20
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
