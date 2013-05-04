@@ -64,7 +64,8 @@ def printDemand():
 def main():
     init()
     data = ""
-    while (data != "END"):
+#    while (data != "END"):
+    for i in xrange(0,20):
         s.send("RECD")
         #DATA
         data = s.recv(1024)
@@ -82,6 +83,8 @@ def main():
         #CONFIG
         data = s.recv(1024)
         print data
+    s.send("STOP")
+    s.close()
 
 main()
 
