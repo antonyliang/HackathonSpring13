@@ -144,7 +144,10 @@ def move():
         #print "CURRENT i: " + str(i) + " " + val
     print val
     return val
-        
+
+
+#calculates potential Damand change
+#detects the trend by looking how long we have been rising or falling
 def calcDemand(region):
     global Demand
     #doesn't start considering until we have at least 3 points
@@ -169,8 +172,8 @@ def calcDemand(region):
 
     return changeDemand(i, trend, region)
 
+#does the math for calcDemand
 def changeDemand(i, trend, region):
-    
     current = Demand[len(Demand) - 1][region]
     dx = Demand[len(Demand) - 1][region] - Demand[len(Demand) - 2][region]
     dx2 = Demand[len(Demand) - 2][region] - Demand[len(Demand) - 3][region]
@@ -273,10 +276,6 @@ def main():
         print data
         parseDemand(data)
         printDemand()
-#        if((i%100)==0):
-#           global foo
-#           foo.append((i,Demand[0]))
-
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -302,6 +301,5 @@ def main():
 
 
 main()
-#print "foo: " + str(foo)
 
 print "\nENDED"
