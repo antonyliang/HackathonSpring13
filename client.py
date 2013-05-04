@@ -1,5 +1,6 @@
 #Team Midas
 import socket
+import math
 
 #Globals
 Revenue = 0
@@ -25,7 +26,7 @@ def init():
     parseCost(data)
     s.send("START")
     data = s.recv(1024)
-    print data
+#    print data
     parseConfig(data)
 
 #parses cost data and stores it in the respective globals
@@ -52,30 +53,33 @@ def move():
     global D_cost
     global Demand
     global Config
-    currentCapNW = Config["W.na"] * 180
-    currentCapEW = Config["W.eu"] * 180
-    currentCapAW = Config["W.ap"] * 180
-    currentCapNJ = Config["J.na"] * 450
-    currentCapEJ = Config["J.eu"] * 450
-    currentCapAJ = Config["J.ap"] * 450
-    currentCapND = Config["D.na"] * 1100
-    currentCapED = Config["D.eu"] * 1100
-    currentCapAD = Config["D.ap"] * 1100
+    currentCapNW = float(Config["W.na"] * 180)
+    currentCapEW = float(Config["W.eu"] * 180)
+    currentCapAW = float(Config["W.ap"] * 180)
+    currentCapNJ = float(Config["J.na"] * 450)
+    currentCapEJ = float(Config["J.eu"] * 450)
+    currentCapAJ = float(Config["J.ap"] * 450)
+    currentCapND = float(Config["D.na"] * 1100)
+    currentCapED = float(Config["D.eu"] * 1100)
+    currentCapAD = float(Config["D.ap"] * 1100)
 
-    projND = calcDemand("NA")
-    projED = calcDemand("EU")
-    projAD = calcDemand("AP")
+    projND = 176#calcDemand("NA")
+    projED = 248#calcDemand("EU")
+    projAD = 621#calcDemand("AP")
 
-'''
-floor((projND - currentcap) / 180)
+    control = []
+    #W.na
+    control.append(int(math.ceil((projND - currentCapNW)/180)))
+    #W.eu
+    control.append(int(math.ceil((projED - currentCapEW)/180)))
+    #W.ap
+    control.append(int(math.ceil((projAD - currentCapAW)/180)))
 
+    print "control: " + str(control)
 
+    if (True):
+        return "CONTROL " + str(control[0]) + " " + str(control[1]) + " " + str(control[2]) + " 0 0 0 0 0 0"
 
-'''
-
-
-#    if (True):
-#        return "CONTROL 0 0 0 0 0 0 0 0 0"
 
 def calcDemand(region):
     global Demand
@@ -158,6 +162,8 @@ def main():
 
 #    while (data != "END"):
     for i in xrange(0,10):
+        print "---------------NEW TURN----------------"
+
         printAllConfig()
         s.send("RECD")
         #DEMAND
