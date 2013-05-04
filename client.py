@@ -8,6 +8,10 @@ W_cost = 0
 J_cost = 0
 D_cost = 0
 
+goingDownWeb = []
+goingDownJava = []
+goingDownData = []
+
 Demand = {}
 Config = {}
 
@@ -48,8 +52,6 @@ def parseCost(data):
     print ""
 
 def move():
-    global Revenue
-    global W_cost
     global J_cost
     global D_cost
     global Demand
@@ -70,78 +72,32 @@ def move():
 
     control = []
     #W.na
-    control.append(int(math.ceil((projND - currentCapNW)/180)))
+    control.append(webLogic(projND, currentCapNW, "W.na"))
     #W.eu
-    control.append(int(math.ceil((projED - currentCapEW)/180)))
+    control.append(webLogic(projED, currentCapEW, "W.eu"))
     #W.ap
-    control.append(int(math.ceil((projAD - currentCapAW)/180)))
+    control.append(webLogic(projAD, currentCapAW, "W.ap"))
     #J.na
-    control.append(int(math.ceil((projND - currentCapNJ)/450)))
+    control.append(javaLogic(projND, currentCapNJ, "J.na"))
     #J.eu
-    control.append(int(math.ceil((projED - currentCapEJ)/450)))
+    control.append(javaLogic(projED, currentCapEJ, "J.eu"))
     #J.ap
-    control.append(int(math.ceil((projAD - currentCapAJ)/450)))
+    control.append(javaLogic(projAD, currentCapAJ, "J.ap"))
     #D.na
-    control.append(int(math.ceil((projND - currentCapND)/1100)))
+    control.append(dataLogic(projND, currentCapND, "D.na"))
     #D.eu
-    control.append(int(math.ceil((projED - currentCapED)/1100)))
+    control.append(dataLogic(projED, currentCapED, "D.eu"))
     #D.ap
-    control.append(int(math.ceil((projAD - currentCapAD)/1100)))
+    control.append(dataLogic(projAD, currentCapAD, "D.ap"))
 
     val = "CONTROL"
     for i in range(len(control)):
         val += " "
-        if(i < 3):
-            if(i % 3 == 0):
-                if (Config["W.na"] + int(control[i])<= 3):
-                    val += "0"
-                else:
-                    val += str(control[i])
-            if(i % 3 == 1):
-                if (Config["W.eu"] + int(control[i])<= 3):
-                    val += "0"
-                else:
-                    val += str(control[i])
-            if(i % 3 == 2):
-                if (Config["W.ap"] + int(control[i])<= 3):
-                    val += "0"
-                else:
-                    val += str(control[i])
-        else: 
-            if(i < 6):
-                if(i % 3 == 0):
-                    if (Config["J.na"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-                if(i % 3 == 1):
-                    if (Config["J.eu"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-                if(i % 3 == 2):
-                    if (Config["J.ap"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-            else:
-                if(i % 3 == 0):
-                    if (Config["D.na"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-                if(i % 3 == 1):
-                    if (Config["D.eu"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-                if(i % 3 == 2):
-                    if (Config["D.ap"] + int(control[i])<= 3):
-                        val += "0"
-                    else:
-                        val += str(control[i])
-            #val += str(0)
-        #print "CURRENT i: " + str(i) + " " + val
+        val += str(control[i])
+        #val += str(0)
+    print val
+    return val
+    #print "CURRENT i: " + str(i) + " " + val
     print val
     return val
 
@@ -204,6 +160,21 @@ def changeDemand(i, trend, region):
             return current + int(1.5 * dx)
         else:
             return current - int(1.5 * dx)
+
+def webLogic(proj, cap, region):
+    global Revenue
+    global W_cost
+    return int(math.ceil(proj - cap )/180)
+
+def javaLogic(proj, cap, region):
+    global Revenue
+    global J_cost
+    return int(math.ceil(proj - cap)/450)
+
+def dataLogic(proj, cap, region):
+    global Revenue
+    global D_cost
+    return int(math.ceil(proj - cap)/1100)
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
