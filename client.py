@@ -11,6 +11,8 @@ D_cost = 0
 Demand = {}
 Config = {}
 
+foo = []
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #creates a connection to the game server and starts the game
@@ -91,10 +93,11 @@ def move():
         val = "CONTROL"
         for i in range(len(control)):
             val += " "
-            val += str(control[i])
+#            val += str(control[i])
+            val += str(0)
         print val
         return val
-
+        
 def calcDemand(region):
     global Demand
     temp = 0
@@ -162,8 +165,9 @@ def main():
     data = ""
 
 #    while (data != "END"):
-    for i in xrange(0,3):
-        print "---------------NEW TURN----------------"
+    for i in xrange(0,10):
+
+        print "---------------TURN# " + str(i) + "----------------"
 
         printAllConfig()
         s.send("RECD")
@@ -172,6 +176,10 @@ def main():
         print data
         parseDemand(data)
         printDemand()
+#        if((i%100)==0):
+#           global foo
+#           foo.append((i,Demand[0]))
+
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -188,6 +196,9 @@ def main():
         parseConfig(data)
     s.send("STOP")
     s.close()
+
+
 main()
+#print "foo: " + str(foo)
 
 print "\nENDED"
