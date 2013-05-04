@@ -51,6 +51,7 @@ function update_fromfile () {
         control.xaxisv += 30;
         control.linepos += 1;
     }
+    draw_graph();
     return isRunning;
 }
 
