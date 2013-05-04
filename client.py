@@ -293,12 +293,13 @@ def javaLogic(proj, cap, region):
     global ConfigJ
 
     #Weigh servers vs overflow
+
     overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.8)}
     overflow = Revenue*overflowRatio[region][1]*(proj - cap)
     addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
 
 #    print str(proj-cap)
-#    print str(region)
+    print str(region)
     print "overflow: " + str(overflow)
     print "addServer: " + str(addServer)
 
