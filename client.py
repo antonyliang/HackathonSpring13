@@ -51,9 +51,11 @@ def parseDemand(data):
     demand.pop(0)
     Demand.append(("Date", demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3]))
     Demand.append(("Demand", ("NA", demand[4]), ("EU", demand[5]), ("AP", demand[6])))
-#    print "Demand: " + str(Demand)
 
-
+#pretty prints Demand
+def printDemand():
+    for i in range (0,len(Demand),2):
+        print str(Demand[i]) + "\t" + str(Demand[i+1])
 
 #while (data != "END"):
 def main():
@@ -79,5 +81,6 @@ def main():
     s.send("STOP")
 
 main()
+
 
 print "\nENDED\n"
