@@ -51,7 +51,8 @@ function update_fromfile () {
         control.xaxisv += 30;
         control.linepos += 1;
     }
-    draw_graph();
+    graph.setData(data);
+    graph.draw();
     return isRunning;
 }
 
@@ -66,7 +67,7 @@ function set_visible(index, yesorno) {
         plots[index] = {show: true};
     }
 
-    draw_graph();
+    graph.draw();
 }
 //alert("Now instantiating graph");
 //alert("value of file:" + file);

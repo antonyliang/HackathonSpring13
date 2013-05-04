@@ -21,7 +21,7 @@ $(document).ready(function () {
     set_visible(1, false);
     */
     while(update_fromfile()) {
-        draw_graph();
+        graph.draw();
         alert(data[0]);
         sleep(20);
         var fi = read_file();
