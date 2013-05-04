@@ -264,6 +264,7 @@ def calcDemand(region):
 
 #does the math for calcDemand
 def changeDemand(i, trend, region):
+    global Demand
     current = Demand[len(Demand) - 1][region]
     dx = Demand[len(Demand) - 1][region] - Demand[len(Demand) - 2][region]
     dx2 = Demand[len(Demand) - 2][region] - Demand[len(Demand) - 3][region]
@@ -375,18 +376,17 @@ def dataLogic(proj, cap, region):
     global goingDownData
     global ConfigD
     global DistD
+    global Demand
 
-    total = 0
+    total = ConfigD[region]
     for i in range(0, len(goingUpData[region])):
         total += goingUpData[region][i]
 
-
-    if(DistD[region] >  50 and (ConfigD[region] + total) == 0):
-        print ""
-        print "WHEEEE " + str(total)
-        print ""
-        goingUpData[region][8] = 1
+    if (Demand[len(Demand) - 1][region] > 800 and total <= 0):
+        goingUpData[region][8] = val
         return 1
+
+    if(DistD["NA"]+DistD["EU"]+DistD["AP"])
 
     current = (proj - cap)/1100.0
     if (current > 0.7):
