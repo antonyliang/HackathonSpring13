@@ -11,6 +11,8 @@ D_cost = 0
 Demand = {}
 Config = {}
 
+foo = []
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #creates a connection to the game server and starts the game
@@ -74,13 +76,28 @@ def move():
     control.append(int(math.ceil((projED - currentCapEW)/180)))
     #W.ap
     control.append(int(math.ceil((projAD - currentCapAW)/180)))
-
-    print "control: " + str(control)
+    #J.na
+    control.append(0)
+    #J.eu
+    control.append(0)
+    #J.ap
+    control.append(0)
+    #D.na
+    control.append(0)
+    #D.eu
+    control.append(0)
+    #D.ap
+    control.append(0)
 
     if (True):
-        return "CONTROL " + str(control[0]) + " " + str(control[1]) + " " + str(control[2]) + " 0 0 0 0 0 0"
-
-
+        val = "CONTROL"
+        for i in range(len(control)):
+            val += " "
+#            val += str(control[i])
+            val += str(0)
+        print val
+        return val
+        
 def calcDemand(region):
     global Demand
     #doesn't start considering until we have at least 3 points
@@ -200,7 +217,8 @@ def main():
 
 #    while (data != "END"):
     for i in xrange(0,10):
-        print "---------------NEW TURN----------------"
+
+        print "---------------TURN# " + str(i) + "----------------"
 
         printAllConfig()
         s.send("RECD")
@@ -209,6 +227,10 @@ def main():
         print data
         parseDemand(data)
         printDemand()
+#        if((i%100)==0):
+#           global foo
+#           foo.append((i,Demand[0]))
+
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -225,6 +247,9 @@ def main():
         parseConfig(data)
     s.send("STOP")
     s.close()
+
+
 main()
+#print "foo: " + str(foo)
 
 print "\nENDED"
