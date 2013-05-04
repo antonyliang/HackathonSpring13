@@ -1,6 +1,11 @@
 #Team Midas
 import socket
 import math
+import os
+import sys
+
+#f = open(os.devnull, 'w')
+#sys.stdout = f
 
 #Globals
 Revenue = 0
@@ -28,7 +33,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -83,6 +88,31 @@ def initArrays():
     for i in goingUpData:
         for j in xrange(0,9):
             goingUpData[i].append(0)
+
+    printArrays()
+
+def printArrays():
+    global goingDownJava
+    global goingDownData
+
+    global goingUpWeb
+    global goingUpJava
+    global goingUpData
+
+    for i in ["NA", "EU", "AP"]:
+        print "COMING DOWN IN " + i + ": "
+        print "JAVA"
+        print goingDownJava[i]
+        print "DATA"
+        print goingDownData[i]
+
+        print "COMING UP IN " + i + ": "
+        print "WEB"
+        print goingUpWeb[i]
+        print "JAVA"
+        print goingUpJava[i]
+        print "DATA"
+        print goingUpData[i]
 
 #moves the servers in queue down in one turn
 #those coming online next turn get considered as basically online and vice versa
@@ -139,6 +169,8 @@ def passArrayTime():
             goingUpData[i][j-1] = goingUpData[i][j]
             goingUpData[i][j] = 0
 
+    printArrays()
+
 #parses cost data and stores it in the respective globals
 def parseCost(data):
     global Revenue 
@@ -168,9 +200,9 @@ def move():
     currentCapNW = float(ConfigW["NA"] * 180)
     currentCapEW = float(ConfigW["EU"] * 180)
     currentCapAW = float(ConfigW["AP"] * 180)
-    currentCapNJ = float(ConfigJ["NA"] * 450)
-    currentCapEJ = float(ConfigJ["EU"] * 450)
-    currentCapAJ = float(ConfigJ["AP"] * 450)
+    currentCapNJ = float(ConfigJ["NA"] * 500)
+    currentCapEJ = float(ConfigJ["EU"] * 500)
+    currentCapAJ = float(ConfigJ["AP"] * 500)
     currentCapND = float(ConfigD["NA"] * 1100)
     currentCapED = float(ConfigD["EU"] * 1100)
     currentCapAD = float(ConfigD["AP"] * 1100)
@@ -293,13 +325,13 @@ def javaLogic(proj, cap, region):
     global ConfigJ
 
     val = int(math.ceil(proj - cap)/450)
-    if (ConfigJ[region] + val <= 0):
+    if(ConfigD[region] + val <= 0):
         return 0
 
     if (val > 0):
-        goingUpJava[region][2] = val
+        goingUpData[region][2] = val
     else:
-        goingDownJava[region][1] = val
+        goingDownData[region][1] = val
     return val
 
 #Decisions on Databases
@@ -413,7 +445,7 @@ def main():
         print ""
         #CONFIG
         data = s.recv(1024)
-        #print data
+        print data
         if(endnum <= 2880 and i > endnum):
             endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
             print "CURRENT ENDNUM"
