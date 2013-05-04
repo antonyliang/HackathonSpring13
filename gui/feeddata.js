@@ -17,8 +17,6 @@ $(document).ready(function () {
     update_data(11, dat);
     update_data(12, dat);
     draw_graph();
-
-    alert("the graph will now set 0 and 1 to invisible");
     set_visible(0, false);
     set_visible(1, false);
 }
