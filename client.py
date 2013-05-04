@@ -74,12 +74,26 @@ def move():
     control.append(int(math.ceil((projED - currentCapEW)/180)))
     #W.ap
     control.append(int(math.ceil((projAD - currentCapAW)/180)))
-
-    print "control: " + str(control)
+    #J.na
+    control.append(0)
+    #J.eu
+    control.append(0)
+    #J.ap
+    control.append(0)
+    #D.na
+    control.append(0)
+    #D.eu
+    control.append(0)
+    #D.ap
+    control.append(0)
 
     if (True):
-        return "CONTROL " + str(control[0]) + " " + str(control[1]) + " " + str(control[2]) + " 0 0 0 0 0 0"
-
+        val = "CONTROL"
+        for i in range(len(control)):
+            val += " "
+            val += str(control[i])
+        print val
+        return val
 
 def calcDemand(region):
     global Demand
@@ -148,7 +162,7 @@ def main():
     data = ""
 
 #    while (data != "END"):
-    for i in xrange(0,10):
+    for i in xrange(0,3):
         print "---------------NEW TURN----------------"
 
         printAllConfig()
