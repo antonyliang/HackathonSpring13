@@ -25,7 +25,7 @@ for(var i = 0; i < 13; i = i + 1) {
 
 // draw_graph();
 file = read_file();
-alert("this should work" + file);
+//alert("this should work" + file);
 if(file != null) {
     control = new Input(file);
 }
