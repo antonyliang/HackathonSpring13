@@ -76,26 +76,74 @@ def move():
     #W.ap
     control.append(int(math.ceil((projAD - currentCapAW)/180)))
     #J.na
-    control.append(0)
+    control.append(int(math.ceil((projND - currentCapNJ)/450)))
     #J.eu
-    control.append(0)
+    control.append(int(math.ceil((projED - currentCapEJ)/450)))
     #J.ap
-    control.append(0)
+    control.append(int(math.ceil((projAD - currentCapAJ)/450)))
     #D.na
-    control.append(0)
+    control.append(int(math.ceil((projND - currentCapND)/1100)))
     #D.eu
-    control.append(0)
+    control.append(int(math.ceil((projED - currentCapED)/1100)))
     #D.ap
-    control.append(0)
+    control.append(int(math.ceil((projAD - currentCapAD)/1100)))
 
-    if (True):
-        val = "CONTROL"
-        for i in range(len(control)):
-            val += " "
-            val += str(control[i])
+    val = "CONTROL"
+    for i in range(len(control)):
+        val += " "
+        if(i < 3):
+            if(i % 3 == 0):
+                if (Config["W.na"] + int(control[i])<= 3):
+                    val += "0"
+                else:
+                    val += str(control[i])
+            if(i % 3 == 1):
+                if (Config["W.eu"] + int(control[i])<= 3):
+                    val += "0"
+                else:
+                    val += str(control[i])
+            if(i % 3 == 2):
+                if (Config["W.ap"] + int(control[i])<= 3):
+                    val += "0"
+                else:
+                    val += str(control[i])
+        else: 
+            if(i < 6):
+                if(i % 3 == 0):
+                    if (Config["J.na"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
+                if(i % 3 == 1):
+                    if (Config["J.eu"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
+                if(i % 3 == 2):
+                    if (Config["J.ap"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
+            else:
+                if(i % 3 == 0):
+                    if (Config["D.na"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
+                if(i % 3 == 1):
+                    if (Config["D.eu"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
+                if(i % 3 == 2):
+                    if (Config["D.ap"] + int(control[i])<= 3):
+                        val += "0"
+                    else:
+                        val += str(control[i])
             #val += str(0)
-        print val
-        return val
+        #print "CURRENT i: " + str(i) + " " + val
+    print val
+    return val
         
 def calcDemand(region):
     global Demand
@@ -212,11 +260,11 @@ def printAllConfig():
 
 def main():
     data = init()
-
-    while (data != "END"):
-#    for i in xrange(0,10):
-
-        #print "---------------TURN# " + str(i) + "----------------"
+    endnum = 1
+    i = 0
+#    while (data != "END"):
+    while (i < 2880):
+        print "---------------TURN# " + str(i) + "----------------"
         parseConfig(data)
         printAllConfig()
         s.send("RECD")
@@ -242,6 +290,13 @@ def main():
         #CONFIG
         data = s.recv(1024)
         print data
+        if(endnum <= 2880 and i > endnum):
+            endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
+            print "CURRENT ENDNUM"
+            print endnum
+            if(endnum >= 2880):
+                endnum = 2880
+        i = i+1
     s.send("STOP")
     s.close()
 
