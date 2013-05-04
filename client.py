@@ -23,7 +23,8 @@ DistD ={}
 ConfigW = {}
 ConfigJ = {}
 ConfigD = {}
-demandArray = {}
+secondProjArr = {}
+thirdProjArr = {}
 
 foo = []
 
@@ -198,7 +199,7 @@ def move():
     global J_cost
     global D_cost
     global Demand
-    global demandArray
+    global secondProjArr
     global ConfigW
     global ConfigJ
     global ConfigD
@@ -217,25 +218,32 @@ def move():
     projED = calcDemand("EU",Demand)
     projAD = calcDemand("AP",Demand)
 
-    projND2 = 0;
-    projED2 = 0;
-    projAD2 = 0;
+    #projected values for the first 6 turns before they are instantiated will be set as proj1
+    projND2 = projND;
+    projED2 = projED;
+    projAD2 = projAD;
+    projND3 = projND;
+    projED3 = projED;
+    projAD3 = projAD;
 
     #creates an array with the tail of Demand with the 3 projected demands appended to the end
     if(len(Demand) == 6):
-        demandArray = projDemand(projND,projED,projAD)
-        
-        projND2 = calcDemand("NA",demandArray)
-        projED2 = calcDemand("EU",demandArray)
-        projAD2 = calcDemand("AP",demandArray)
+        secondProjArr = projDemand(Demand,projND,projED,projAD)
+        projND2 = calcDemand("NA",secondProjArr)
+        projED2 = calcDemand("EU",secondProjArr)
+        projAD2 = calcDemand("AP",secondProjArr)        
+        thirdProjArr = projDemand(secondProjArr,projND2,projED2,projAD2)
+        projND3 = calcDemand("NA",thirdProjArr)
+        projED3 = calcDemand("NA",thirdProjArr)
+        projAD3 = calcDemand("NA",thirdProjArr)
 
     control = []
     #Web NA
-    control.append(webLogic(projND, projND2, currentCapNW, "NA"))
+    control.append(webLogic(projND, projND2, projND3, currentCapNW, "NA"))
     #Web EU
-    control.append(webLogic(projED, projED2, currentCapEW, "EU"))
+    control.append(webLogic(projED, projED2, projED3, currentCapEW, "EU"))
     #Web AP
-    control.append(webLogic(projAD, projAD2, currentCapAW, "AP"))
+    control.append(webLogic(projAD, projAD2, projAD3, currentCapAW, "AP"))
     #Java NA
     control.append(javaLogic(projND, currentCapNJ, "NA"))
     #Java EU
@@ -259,20 +267,18 @@ def move():
     return val
 
 #adds projected values into a copy of Demand called demandArray
-def projDemand(projND,projED,projAD):
-    global demandArray
-    global Demand
+def projDemand(arr,projND,projED,projAD):
+    global secondProjArr
     for i in range (5):
-        demandArray[i] = Demand[i+1]
-    demandArray[5] = {"NA": projND, "EU": projED, "AP": projAD}
-#    print "demandArray: " + str(demandArray)
-    return demandArray
+        secondProjArr[i] = arr[i+1]
+    secondProjArr[5] = {"NA": projND, "EU": projED, "AP": projAD}
+    return secondProjArr
 
 #calculates potential Damand change
 #detects the trend by looking how long we have been rising or falling
 def calcDemand(region,projDemand):
     global Demand
-    global demandArray
+    global secondProjArr
     #doesn't start considering until we have at least 3 points
     if(len(projDemand) < 3):
         return projDemand[len(projDemand) - 1][region]
@@ -349,16 +355,24 @@ def changeDemand(i, trend, region):
                 return current + int(.125 * dx)
 
 #Decisions on Web Servers
-def webLogic(proj, proj2, cap, region):
+def webLogic(proj, proj2, proj3, cap, region):
     global Revenue
     global W_cost
     global goingUpWeb
     global goingDownWeb
     global ConfigW
+    
+    val = int(math.ceil(proj - cap)/180)
+    val2 = int(math.ceil(proj2 - cap)/180)
+    val3 = int(math.ceil(proj3 - cap)/180)
+    print "val: " + str(val)
+    print "val2: " + str(val2)
+    print "val3: " + str(val3)
 
-#    print "proj: " + str(proj)
-#    print "proj2: " + str(proj2)
+    ans = 0
 
+    #ConfigW[region] + val <= 0
+    #goingUpWeb[region][2] = val + val3
 
     val = int(math.ceil(proj - cap)/180)
     val2 = int(math.ceil(proj2 - cap)/180)
@@ -378,7 +392,15 @@ def javaLogic(proj, cap, region):
     global ConfigJ
     global DistJ
 
-    val = int(math.ceil(proj - cap)/450)
+    overflowRatio = {"NA": ("EU", 0.9), "EU": ("NA", 0.9), "AP": ("NA", 0.8)}
+    overflow = Revenue*overflowRatio[region][1]*(proj - cap)
+    addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
+
+    if(addServer < overflow):
+        val = int(math.ceil(proj - cap)/450)
+    else:
+        val = 0
+
     if (ConfigJ[region] + val <= 0):
         return 0
 
