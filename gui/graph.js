@@ -36,6 +36,7 @@ function update_data (index, dat) {
 }
 
 function update_fromfile () {
+    alert("updating from file");
     var splitdata;
     var isRunning = true;
     while(control.linepos < control.lines.length) {
