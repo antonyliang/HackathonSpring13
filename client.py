@@ -66,8 +66,16 @@ def move():
     projED = calcDemand("EU")
     projAD = calcDemand("AP")
 
-    if (True):
-        return "CONTROL 0 0 0 0 0 0 0 0 0"
+'''
+floor((projND - currentcap) / 180)
+
+
+
+'''
+
+
+#    if (True):
+#        return "CONTROL 0 0 0 0 0 0 0 0 0"
 
 def calcDemand(region):
     global Demand
