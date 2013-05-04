@@ -7,7 +7,7 @@ W_cost = 0
 J_cost = 0
 D_cost = 0
 
-Demand = []
+Demand = {}
 Config = {}
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,13 +71,21 @@ def parseDemand(data):
     global Demand
     demand = data.split()
     demand.pop(0)
-    Demand.append(("Date", demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3]))
-    Demand.append(("Demand", ("NA", demand[4]), ("EU", demand[5]), ("AP", demand[6])))
-
+    #if the length of Demand is > threshold, pop off the oldest data point
+    if(len(Demand) >= 5):
+        demandKeys = sorted(Demand.keys())
+        Demand.pop(demandKeys[0])
+    Demand[str(demand[0] + " " + demand[1] + ":" + demand[2] + ":" + demand[3])] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]} 
+        
 #Pretty prints Demand
 def printDemand():
-    for i in range (0,len(Demand),2):
-        print str(Demand[i]) + "\t" + str(Demand[i+1])
+#    for i in range (0,len(Demand),2):
+#        print str(Demand[i]) + "\t" + str(Demand[i+1])
+    demandKeys = sorted(Demand.keys())
+    for i in range (0, len(demandKeys)):
+        print str(demandKeys[i]) + ": " + str(Demand[demandKeys[i]])
+
+    print "length: " + str(len(Demand))
 
 #Stores our current number of servers in each region into Config
 def parseConfig(data):
@@ -112,14 +120,16 @@ def printAllConfig():
 def main():
     init()
     data = ""
-#    while (data != "END"):0
-    for i in xrange(0,5):
-        #printAllConfig()
+
+#    while (data != "END"):
+    for i in xrange(0,6):
+        printAllConfig()
         s.send("RECD")
         #DATA
         data = s.recv(1024)
         print data
         parseDemand(data)
+        printDemand()
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -132,12 +142,11 @@ def main():
         print ""
         #CONFIG
         data = s.recv(1024)
-        print data
+ #       print data
         parseConfig(data)
     s.send("STOP")
     s.close()
     printDemand()
 main()
-printAllConfig()
 
 print "\nENDED"
