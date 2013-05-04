@@ -31,7 +31,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -220,11 +220,11 @@ def move():
     #Java AP
     control.append(javaLogic(projAD, currentCapAJ, "AP"))
     #Data NA
-    control.append(dataLogic(projND, currentCapND, "NA"))
+    control.append(dataLogic(projND, projED, projAD))
     #Data EU
-    control.append(dataLogic(projED, currentCapED, "EU"))
+    #control.append(dataLogic(projED, currentCapED, "EU"))
     #Data AP
-    control.append(dataLogic(projAD, currentCapAD, "AP"))
+    #control.append(dataLogic(projAD, currentCapAD, "AP"))
 
     val = "CONTROL"
     for i in range(len(control)):
@@ -369,7 +369,7 @@ def javaLogic(proj, cap, region):
     return val
 
 #Decisions on Databases
-def dataLogic(proj, cap, region):
+def dataLogic(projN, projE, projA):
     global Revenue
     global D_cost
     global goingUpData
@@ -377,31 +377,14 @@ def dataLogic(proj, cap, region):
     global ConfigD
     global DistD
     global Demand
+    totalProjected = projN + projE + projA
+    #totalDemand = Demand[length - 1]["NA"] + Demand[length - 1]["EU"] + Demand[length - 1]["AP"]
+    currentCap = (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200
+    if(currentCap < totalProjected):
+        if((totalProjected - currentCap) > (Revenue / D_Cost)):
+            location = "NA"
 
-    total = ConfigD[region]
-    for i in range(0, len(goingUpData[region])):
-        total += goingUpData[region][i]
-
-    if (Demand[len(Demand) - 1][region] > 800 and total <= 0):
-        goingUpData[region][8] = val
-        return 1
-
-    if(DistD["NA"]+DistD["EU"]+DistD["AP"])
-
-    current = (proj - cap)/1100.0
-    if (current > 0.7):
-        val = int(math.ceil(current))
-    else:
-        val = int(math.floor(current))
-
-    if(ConfigD[region] + val <= 0):
-        return 0
-
-    if (val > 0):
-        goingUpData[region][8] = val
-    else:
-        goingDownData[region][2] = val
-    return val
+    return "0 0 0"
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
@@ -488,6 +471,7 @@ def printAllConfig():
         print i + " Web: " + str(ConfigW[i]) + " \t" + i + " Java: " + str(ConfigJ[i]) + " \t" + i + " Data: " + str(ConfigD[i])
 
 def main():
+    towrite = open('data.txt', 'w')
     data = init()
     endnum = 1
     i = 0
@@ -502,6 +486,9 @@ def main():
         print data
         parseDemand(data)
         #printDemand()
+        print str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"])
+        towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
+        towrite.flush()
         s.send("RECD")
         #DIST
         data = s.recv(1024)
