@@ -8,7 +8,6 @@ J_cost = 0
 D_cost = 0
 
 Demand = []
-Profit = []
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
