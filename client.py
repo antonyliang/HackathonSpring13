@@ -79,6 +79,7 @@ def main():
         data = s.recv(1024)
         print data
         s.send(move())
+        print ""
         #CONFIG
         data = s.recv(1024)
         print data
