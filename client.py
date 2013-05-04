@@ -36,11 +36,14 @@ def parseCost(data):
     print "Java " + str(J_cost)
     print "Data " + str(D_cost)
 
+def move():
+    if (True):
+        return "CONTROL 0 0 0 0 0 0 0 0 0"
 
-#while (data != "END"):
 def main():
     init()
-    for i in xrange(0,5):
+    data = ""
+    while (data != "END"):
         s.send("RECD")
         data = s.recv(1024)
         print data
@@ -50,7 +53,7 @@ def main():
         s.send("RECD")
         data = s.recv(1024)
         print data
-        s.send("CONTROL 0 0 0 0 0 0 0 0 0")
+        s.send(move())
         data = s.recv(1024)
         print data
     s.send("STOP")
