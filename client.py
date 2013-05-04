@@ -62,8 +62,18 @@ def move():
     currentCapED = Config["D.eu"] * 1100
     currentCapAD = Config["D.ap"] * 1100
 
+    projND = calcDemand("NA")
+    projED = calcDemand("EU")
+    projAD = calcDemand("AP")
+    
     if (True):
         return "CONTROL 0 0 0 0 0 0 0 0 0"
+
+def calcDemand(region):
+    global Demand
+    temp = 0
+    for i in Demand:
+        temp = i[region]
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
