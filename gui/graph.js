@@ -33,6 +33,16 @@ if(file != null) {
 function update_data (index, dat) {
     data[index] = dat;
 }
+
+function update_fromfile () {
+    var xaxisCounter = 0;
+    for(var i = 0; i < control.stats.length; i = i + 1) {
+        data[i] = [xaxisCounter, control.stats[i]];
+        xaxisCounter = xaxisCounter + 1;
+    }
+}
+
+
 function set_visible(index, yesorno) {
     if(!yesorno) {
         lines[index] = {show: false};
