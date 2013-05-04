@@ -71,8 +71,8 @@ function set_visible(index, yesorno) {
 //alert("Now instantiating graph");
 //alert("value of file:" + file);
 //alert("This is control " + control);
-function draw_graph() {
-    $.plot (
+
+    var graph = $.plot (
         $("#placeholder"),
         [
             {
@@ -176,6 +176,3 @@ function draw_graph() {
             
         ]
     );
-
-
-}
