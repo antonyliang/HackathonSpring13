@@ -26,6 +26,7 @@ def init():
     s.send("START")
     data = s.recv(1024)
     print data
+    parseConfig(data)
 
 #parses cost data and stores it in the respective globals
 def parseCost(data):
@@ -42,6 +43,7 @@ def parseCost(data):
     print "WEB " + str(W_cost)
     print "Java " + str(J_cost)
     print "Data " + str(D_cost)
+    print ""
 
 def move():
     global Revenue
@@ -49,6 +51,16 @@ def move():
     global J_cost
     global D_cost
     global Demand
+    global Config
+    currentCapNW = Config["W.na"] * 180
+    currentCapEW = Config["W.eu"] * 180
+    currentCapAW = Config["W.ap"] * 180
+    currentCapNJ = Config["J.na"] * 450
+    currentCapEJ = Config["J.eu"] * 450
+    currentCapAJ = Config["J.ap"] * 450
+    currentCapND = Config["D.na"] * 1100
+    currentCapED = Config["D.eu"] * 1100
+    currentCapAD = Config["D.ap"] * 1100
 
     if (True):
         return "CONTROL 0 0 0 0 0 0 0 0 0"
@@ -72,15 +84,15 @@ def parseConfig(data):
     global Config
     config = data.split()
     config.pop(0)
-    Config["W.na"] = config[0]
-    Config["W.eu"] = config[1]
-    Config["W.ap"] = config[2]
-    Config["J.na"] = config[3]
-    Config["J.eu"] = config[4]
-    Config["J.ap"] = config[5]
-    Config["D.na"] = config[6]
-    Config["D.eu"] = config[7]
-    Config["D.ap"] = config[8]
+    Config["W.na"] = int(config[0])
+    Config["W.eu"] = int(config[1])
+    Config["W.ap"] = int(config[2])
+    Config["J.na"] = int(config[3])
+    Config["J.eu"] = int(config[4])
+    Config["J.ap"] = int(config[5])
+    Config["D.na"] = int(config[6])
+    Config["D.eu"] = int(config[7])
+    Config["D.ap"] = int(config[8])
     
 
 #Pretty prints a key-value pair in Config
@@ -95,14 +107,14 @@ def printAllConfig():
     configKeys = sorted(Config.keys())
     configKeys.reverse()
     for i in range(0,len(configKeys),3):
-        print configKeys[i] + ": " + Config[configKeys[i]] + " \t" + configKeys[i+1] + ": " + Config[configKeys[i+1]] + " \t" + configKeys[i+2] + ": " + Config[configKeys[i+2]]
-
+        print str(configKeys[i]) + ": " + str(Config[configKeys[i]]) + " \t" + str(configKeys[i+1]) + ": " + str(Config[configKeys[i+1]]) + " \t" + str(configKeys[i+2]) + ": " + str(Config[configKeys[i+2]])
 
 def main():
     init()
     data = ""
-#    while (data != "END"):
-    for i in xrange(0,2):
+#    while (data != "END"):0
+    for i in xrange(0,5):
+        #printAllConfig()
         s.send("RECD")
         #DATA
         data = s.recv(1024)
@@ -124,7 +136,7 @@ def main():
         parseConfig(data)
     s.send("STOP")
     s.close()
-
+    printDemand()
 main()
 printAllConfig()
 
