@@ -28,8 +28,7 @@ def init():
     parseCost(data)
     s.send("START")
     data = s.recv(1024)
-#    print data
-    parseConfig(data)
+    return data
 
 #parses cost data and stores it in the respective globals
 def parseCost(data):
@@ -93,8 +92,8 @@ def move():
         val = "CONTROL"
         for i in range(len(control)):
             val += " "
-#            val += str(control[i])
-            val += str(0)
+            val += str(control[i])
+            #val += str(0)
         print val
         return val
         
@@ -110,7 +109,7 @@ def calcDemand(region):
         trend = "up"
     else:
         trend = "down"
-    for m in xrange(len(Demand) - 2, 1, -1):
+    for m in xrange(len(Demand) - 2, 0, -1):
         i = i+1
         dx2 = Demand[i][region] - Demand[i - 1][region]
         if(dx > dx2):
@@ -120,7 +119,7 @@ def calcDemand(region):
             if(trend != "down"):
                 return changeDemand(i, trend, region)
 
-    return changeDemand(i, trend)
+    return changeDemand(i, trend, region)
 
 def changeDemand(i, trend, region):
     
@@ -162,16 +161,16 @@ def parseDemand(data):
     demand = data.split()
     demand.pop(0)
     #if the length of Demand is > threshold, pop off the oldest data point
-    if(len(Demand) >= 5):
+    if(len(Demand) >= 6):
         Demand.pop(0)
         Demand[0] = Demand[1]
         Demand[1] = Demand[2]
         Demand[2] = Demand[3]
         Demand[3] = Demand[4]
         Demand[4] = Demand[5]
-        Demand[5] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}
+        Demand[5] = {"NA": int(demand[4]), "EU": int(demand[5]), "AP": int(demand[6])}
     else:
-        Demand[len(Demand)] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}  
+        Demand[len(Demand)] = {"NA": int(demand[4]), "EU": int(demand[5]), "AP": int(demand[6])}  
        
 #Pretty prints Demand
 def printDemand():
@@ -212,14 +211,13 @@ def printAllConfig():
         print str(configKeys[i]) + ": " + str(Config[configKeys[i]]) + " \t" + str(configKeys[i+1]) + ": " + str(Config[configKeys[i+1]]) + " \t" + str(configKeys[i+2]) + ": " + str(Config[configKeys[i+2]])
 
 def main():
-    init()
-    data = ""
+    data = init()
 
-#    while (data != "END"):
-    for i in xrange(0,10):
+    while (data != "END"):
+#    for i in xrange(0,10):
 
-        print "---------------TURN# " + str(i) + "----------------"
-
+        #print "---------------TURN# " + str(i) + "----------------"
+        parseConfig(data)
         printAllConfig()
         s.send("RECD")
         #DEMAND
@@ -243,8 +241,7 @@ def main():
         print ""
         #CONFIG
         data = s.recv(1024)
- #       print data
-        parseConfig(data)
+        print data
     s.send("STOP")
     s.close()
 
