@@ -109,7 +109,8 @@ def parseDemand(data):
         Demand[1] = Demand[2]
         Demand[2] = Demand[3]
         Demand[3] = Demand[4]
-        Demand[4] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}
+        Demand[4] = Demand[5]
+        Demand[5] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}
     else:
         Demand[len(Demand)] = {"NA": demand[4], "EU": demand[5], "AP": demand[6]}  
        
