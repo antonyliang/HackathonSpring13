@@ -20,10 +20,11 @@ $(document).ready(function () {
     set_visible(0, false);
     set_visible(1, false);
     */
-
-    update_fromfile();
-    draw_graph();
-    alert(data[0]);
+    while(update_fromfile()) {
+        draw_graph();
+        alert(data[0]);
+        control.file = read_file();
+    }
     
 }
                  );
