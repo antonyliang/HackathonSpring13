@@ -57,4 +57,4 @@ def main():
 
 main()
 
-print "\nENDED"
+print "\nENDED\n"
