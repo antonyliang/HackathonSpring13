@@ -81,9 +81,9 @@ function set_visible(index, yesorno) {
 
 function parse_file () {
 //    alert("parsing file");
-    update_fromfile();
+//    update_fromfile();
 //    alert("this is the data that will be sent" + data);
-    update_plot();
+  //  update_plot();
   //  alert("first parse");
     var fi = null;
     while(control.lines[control.linepos] !== "END") {
