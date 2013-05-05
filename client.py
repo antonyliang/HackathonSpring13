@@ -98,20 +98,20 @@ def printArrays():
     global goingUpJava
     global goingUpData
 
-    for i in ["NA", "EU", "AP"]:
-        print "COMING DOWN IN " + i + ": "
-        print "JAVA"
-        print goingDownJava[i]
-        print "DATA"
-        print goingDownData[i]
+#    for i in ["NA", "EU", "AP"]:
+#        print "COMING DOWN IN " + i + ": "
+#        print "JAVA"
+#        print goingDownJava[i]
+#        print "DATA"
+#        print goingDownData[i]
 
-        print "COMING UP IN " + i + ": "
-        print "WEB"
-        print goingUpWeb[i]
-        print "JAVA"
-        print goingUpJava[i]
-        print "DATA"
-        print goingUpData[i]
+#        print "COMING UP IN " + i + ": "
+#        print "WEB"
+#        print goingUpWeb[i]
+#        print "JAVA"
+#        print goingUpJava[i]
+#        print "DATA"
+#        print goingUpData[i]
 
 
 #moves the servers in queue down in one turn
@@ -145,7 +145,7 @@ def passArrayTime():
 
         for j in range(1,len(goingDownData[i])):
             goingDownData[i][j-1] = goingDownData[i][j]
-            ConfigD[i] = ConfigD[i] - goingDownData[i][0]
+            ConfigD[i] = ConfigD[i] - goingDownData[i][j]
             goingDownData[i][j] = 0
 
         if (goingUpWeb[i][0] > 0):
@@ -164,7 +164,7 @@ def passArrayTime():
         for j in range(1,len(goingUpJava[i])):
             goingUpJava[i][j-1] = goingUpJava[i][j]
             if (i == 1 or i == 2):
-                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][0]
+                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][j]
             goingUpJava[i][j] = 0
 
         if (goingUpData[i][0] > 0):
@@ -173,7 +173,7 @@ def passArrayTime():
 
         for j in range(1,len(goingUpData[i])):
             goingUpData[i][j-1] = goingUpData[i][j]
-            ConfigD[i] = ConfigD[i] + goingUpData[i][0]
+            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
             goingUpData[i][j] = 0
     printArrays()
 
@@ -365,23 +365,19 @@ def webLogic(proj, proj2, proj3, cap, region):
     val = int(math.ceil(proj - cap)/180)
     val2 = int(math.ceil(proj2 - cap)/180)
     val3 = int(math.ceil(proj3 - cap)/180)
-    print "val: " + str(val)
-    print "val2: " + str(val2)
-    print "val3: " + str(val3)
 
     ans = 0
 
-    #ConfigW[region] + val <= 0
-    #goingUpWeb[region][2] = val + val3
+#    if (val3 > 0):
+#        goingUpWeb[region][2] = val3
+#        ans += val3
+#    if (ConfigW[region] + val >= 0):
+#        goingUpWeb[region][2] += val
+#        ans += val
+#    if((ConfigW[region] + val >=0) and (val <= 0)):
+#       ans += val
 
-    val = int(math.ceil(proj - cap)/180)
-    val2 = int(math.ceil(proj2 - cap)/180)
-    if(ConfigW[region] + val2 <= 0):
-        return 0
-
-    if (val > 0):
-        goingUpWeb[region][2] = val2
-    return val
+    return ans
 
 #Decisions on Java Servers
 def javaLogic(proj, cap, region):
