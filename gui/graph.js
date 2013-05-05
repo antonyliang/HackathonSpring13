@@ -60,7 +60,6 @@ function set_visible(index, isVisible) {
         plots[index] = {show: true};
     }
 
-    draw_graph();
 }
 //alert("Now instantiating graph");
 //alert("value of file:" + file);
