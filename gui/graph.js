@@ -72,8 +72,16 @@ function parse_file () {
 //    alert("this is the data that will be sent" + data);
   //  update_plot();
   //  alert("first parse");
-    var fi = null;
-
+    while(control.linevals[linepos] !== "END") {
+        var fi = read_file(); //keep reloading the file
+        if(fi != null) {
+            control.file = fi;
+            //split line, insert it into chart, then increment position
+            control.linevals = fi.split("\n");
+            update_fromline(control.linevals[control.linepos]);
+        }
+    }
+}
    $(document).ready(function () {
       linegraph = $.plot (
         $("#placeholder"),
