@@ -46,6 +46,7 @@ var linepos = 0;
      profitgraph.setData([data[12]]);
      profitgraph.setupGrid();
      profitgraph.draw();
+     servergraph();
  }
 
  function update_fromline (line) {
@@ -122,7 +123,7 @@ function parse_file () {
                 lines: lines[2],
                 points: plots[2]
 
-            },
+            }
             
         ]
     );
