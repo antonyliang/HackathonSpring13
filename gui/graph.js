@@ -73,10 +73,7 @@ function parse_file () {
   //  update_plot();
   //  alert("first parse");
     var fi = null;
-    
-function draw_graph() {
-    
-}
+
    $(document).ready(function () {
       linegraph = $.plot (
         $("#placeholder"),
