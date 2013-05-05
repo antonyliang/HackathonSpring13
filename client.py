@@ -55,7 +55,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27835))
+    s.connect(("hackathon.hopto.org", 27834))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -271,12 +271,8 @@ def move():
     control.append(javaLogic(projED, currentCapEJ, "EU"))
     #Java AP
     control.append(javaLogic(projAD, currentCapAJ, "AP"))
-    #Data NA
+    #Data All Regions
     control.append(dataLogic(projND, projED, projAD))
-    #Data EU
-    #control.append(dataLogic(projED, currentCapED, "EU"))
-    #Data AP
-    #control.append(dataLogic(projAD, currentCapAD, "AP"))
 
     val = "CONTROL"
     for i in range(len(control)):
@@ -386,8 +382,7 @@ def webLogic(proj, proj2, proj3, cap, region):
     val = int(math.floor(proj - cap)/190)
     val2 = int(math.floor(proj2 - cap)/190)
     val3 = int(math.ceil(proj3 - cap)/190)
-    print "val1:......................................." + str(val)
-    print "val2:......................................." + str(val2)
+
     ans = 0
 
     if(ConfigW[region] + val <= 0):
@@ -430,14 +425,13 @@ def dataLogic(projN, projE, projA):
     global goingUpData
     global goingDownData
     global ConfigD
+    global ConfigJ
     global DistD
     global Demand
 
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
     projections = {"NA": projN, "EU": projE, "AP": projA}
-
-
     if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) > (Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"])):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
         currentKey = max(locations, key=locations.get)
@@ -448,14 +442,13 @@ def dataLogic(projN, projE, projA):
     else:
         if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
             return "0 0 0"
-        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 500 <  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
+        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) <  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
             locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
 #            currentKey = max(locations.iteritems(), key=locations.itemgetter(1))[0]
             currentKey = min(locations, key=locations.get)
             locations[currentKey]
             goingUpData[currentKey][8] = 1
             return val[currentKey]
-    
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
@@ -569,7 +562,7 @@ def main():
         i = i+1
         if(i == 2778):
             sys.stdout = sys.__stdout__
-    to.write("END")
+    towrite.write("END")
     s.send("STOP")
     s.close()
 
