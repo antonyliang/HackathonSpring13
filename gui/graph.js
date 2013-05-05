@@ -80,6 +80,7 @@ function set_visible(index, isVisible) {
 //alert("This is control " + control);
 
 function parse_file () {
+
     alert("parsing");
     var fi = null;
     fi = read_file();
