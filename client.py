@@ -55,7 +55,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27834))
+    s.connect(("hackathon.hopto.org", 27835))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -383,17 +383,18 @@ def webLogic(proj, proj2, proj3, cap, region):
     global goingDownWeb
     global ConfigW
     
-    val = int(math.ceil(proj - cap)/190)
-    val2 = int(math.ceil(proj2 - cap)/190)
+    val = int(math.floor(proj - cap)/190)
+    val2 = int(math.floor(proj2 - cap)/190)
     val3 = int(math.ceil(proj3 - cap)/190)
-
+    print "val1:......................................." + str(val)
+    print "val2:......................................." + str(val2)
     ans = 0
 
     if(ConfigW[region] + val <= 0):
-        return 0
+        return (-1*ConfigW[region] + 1)
     if(val2 > 0):
-       goingUpWeb[region][2] = val2
-    return val
+        goingUpWeb[region][2] = val2
+    return val2
 
 #Decisions on Java Servers
 def javaLogic(proj, cap, region):
@@ -436,21 +437,24 @@ def dataLogic(projN, projE, projA):
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
     projections = {"NA": projN, "EU": projE, "AP": projA}
 
-    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) >  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
+
+    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) > (Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"])):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
-        currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
+        currentKey = max(locations, key=locations.get)
+#        currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
         locations[currentKey]
-        goingUpData[currentKey][8] = 1
-        return val[currentKey]
+        goingDownData[currentKey][2] = 1
+        return negval[currentKey]
     else:
         if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
             return "0 0 0"
         if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 500 <  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
             locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
-            currentKey = max(locations.iteritems(), key=operator.itemgetter(1))[0]
+#            currentKey = max(locations.iteritems(), key=locations.itemgetter(1))[0]
+            currentKey = min(locations, key=locations.get)
             locations[currentKey]
-            goingDownData[currentKey][2] = 1
-            return negval[currentKey]
+            goingUpData[currentKey][8] = 1
+            return val[currentKey]
     
 
 #parses demand data and stores it in global Demand
