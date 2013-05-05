@@ -43,6 +43,7 @@ var xaxis_val = 1;
  }
 
  function update_fromline (line) {
+     alert("Here's your line: " + line);
      var input = line.split(",");
      for(var n = 0; n < input.length; n = n +1) {
          data[n].push([xaxis_val, input[n]]);
@@ -71,13 +72,20 @@ function parse_file () {
 //    alert("this is the data that will be sent" + data);
   //  update_plot();
   //  alert("first parse");
+    alert("entering parse");
     while(control.linevals[control.linepos] !== "END") {
         var fi = read_file(); //keep reloading the file
         if(fi != null) {
+            alert("your in if");
             control.file = fi;
             //split line, insert it into chart, then increment position
-            control.linevals = fi.split("\n");
+            control.linevals = fi.split
+
+("\n");
             update_fromline(control.linevals[control.linepos]);
+            control.linevals = control.linevals + 1;
+            xaxis_val = xaxis_val + 1;
+            update_plot();
         }
     }
 }
