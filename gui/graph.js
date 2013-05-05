@@ -43,6 +43,9 @@ var linepos = 0;
      linegraph.setData(data);
      linegraph.setupGrid();
      linegraph.draw();
+     profitgraph.setData(data[12]);
+     profitgraph.setupGrid();
+     profitgraph.draw();
  }
 
  function update_fromline (line) {
