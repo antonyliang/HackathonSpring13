@@ -18,6 +18,7 @@ var profitgraph = null;
 var servergraph = null;
 var xaxis_val = 1;
 var linepos = 0;
+var linevals = [];
  for(var i = 0; i < 10; i = i + 1) {
      lines[i] = new Array();
   }
@@ -84,15 +85,21 @@ function parse_file () {
   //  update_plot();
   //  alert("first parse");
 //    alert("entering parse");
-    while(control.linevals[linepos] !== "END") {
-        var fi = read_file(); //keep reloading the file
-        if(fi != null && fi != control.file) {
+    var fi = null;
+    while(linevals[linepos] !== "END") {
+         fi = read_file(); //keep reloading the file
+//        alert(fi == control.file);
+        if(fi !== null && fi !== "") {
 //            alert("your in if");
+            alert(linevals[9]);
             control.file = fi;
             //split line, insert it into chart, then increment position
-            control.linevals = fi.split("\n");
-            alert(control.linevals);
-            update_fromline(control.linevals[linepos]);
+            linevals = control.file.split("\n");
+//            alert(linevals);
+            console.log("linevals " + linevals);
+            console.log("line " + linevals[linepos]);
+            console.log("linepos " + linepos);
+            update_fromline(linevals[linepos]);
             linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
             update_plot();
