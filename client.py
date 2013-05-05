@@ -103,20 +103,20 @@ def printArrays():
     global goingUpJava
     global goingUpData
 
-#    for i in ["NA", "EU", "AP"]:
-#        print "COMING DOWN IN " + i + ": "
-#        print "JAVA"
-#        print goingDownJava[i]
-#        print "DATA"
-#        print goingDownData[i]
+    for i in ["NA", "EU", "AP"]:
+        print "COMING DOWN IN " + i + ": "
+        print "JAVA"
+        print goingDownJava[i]
+        print "DATA"
+        print goingDownData[i]
 
-#        print "COMING UP IN " + i + ": "
-#        print "WEB"
-#        print goingUpWeb[i]
-#        print "JAVA"
-#        print goingUpJava[i]
-#        print "DATA"
-#        print goingUpData[i]
+        print "COMING UP IN " + i + ": "
+        print "WEB"
+        print goingUpWeb[i]
+        print "JAVA"
+        print goingUpJava[i]
+        print "DATA"
+        print goingUpData[i]
 
 
 #moves the servers in queue down in one turn
