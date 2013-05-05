@@ -3,7 +3,7 @@
 var Input = function (input) {
     this.file=input;//stores the file with the information
     //    alert(this.file);
-    this.lines = this.file.split("\n");
+    this.linevals = this.file.split("\n");
     this.linepos = 0; //stores the position in the file
    // this.stats = this.line;  //the array of elements split by newline
     this.xaxisv = 0;
@@ -13,7 +13,7 @@ var Input = function (input) {
     };
 
     //this method expands the lines without compromising position
-    this.expand_lines = function () {
-        this.lines = this.file.split("\n");
+    this.expand_linevals = function () {
+        this.linevals = this.file.split("\n");
     };
 };
