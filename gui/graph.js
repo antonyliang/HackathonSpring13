@@ -83,6 +83,7 @@ function parse_file () {
             update_fromline(linevals[linepos]);
             linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
+            update_plot();
         }
         alert("done");
     }
