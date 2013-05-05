@@ -40,7 +40,7 @@ var linepos = 0;
      data[index] = dat;
  }
  function update_plot() {
-     linegraph.setData(data);
+     linegraph.setData([data[0], data[1], data[2]]);
      linegraph.setupGrid();
      linegraph.draw();
      profitgraph.setData([data[12]]);
