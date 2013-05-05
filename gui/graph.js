@@ -15,6 +15,7 @@ var plots = new Array();
 var data = new Array();
 var linegraph = null;
 var xaxis_val = 1;
+var linepos = 0;
  for(var i = 0; i < 10; i = i + 1) {
      lines[i] = new Array();
   }
@@ -73,7 +74,7 @@ function parse_file () {
   //  update_plot();
   //  alert("first parse");
     alert("entering parse");
-    while(control.linevals[control.linepos] !== "END") {
+    while(control.linevals[linepos] !== "END") {
         var fi = read_file(); //keep reloading the file
         if(fi != null) {
             alert("your in if");
@@ -82,7 +83,7 @@ function parse_file () {
             control.linevals = fi.split
 
 ("\n");
-            update_fromline(control.linevals[control.linepos]);
+            update_fromline(control.linevals[linepos]);
             control.linevals = control.linevals + 1;
             xaxis_val = xaxis_val + 1;
             update_plot();
