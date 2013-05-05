@@ -123,75 +123,6 @@ function parse_file () {
                 points: plots[2]
 
             },
-
-
-            {
-                label: "Number of Web Servers in North America",
-                data: data[3],
-                lines: lines[3],
-                points: plots[3]
-            },
-
-            {
-                label: "Number of Web Servers in the European Union",
-                data: data[4],
-                lines: lines[4],
-                points: plots[4]
-
-            },
-
-            {
-                label: "Number of Web Servers in the Asian Pacific",
-                data: data[5],
-                lines: lines[5],
-                points: lines[5]
-
-            },
-
-            {
-                label: "Number of Java Servers in the United States",
-                data: data[6],
-                lines: lines[6],
-                points: plots[6]
-
-            },
-            {
-                label: "Number of Java Servers in the European Union",
-                data: data[7],
-                lines: lines[7],
-                points: plots[7]
-
-            },
-            {
-                label: "Number of Java Servers in the Asian Pacific",
-                data: data[8],
-                lines: lines[8],
-                points: plots[8]
-
-            },
-            {
-                label: "Number of Database Servers in the United States",
-                data: data[9],
-                lines: lines[9],
-                points: plots[9]
-
-            },
-            {
-                label: "Number of Database Servers in the European Union",
-                data: data[10],
-                lines: lines[10],
-                points: plots[10]
-
-            },
-            {
-                label: "Number of Database Servers in the Asian Pacific",
-                data: data[11],
-                lines: lines[11],
-                points: plots[11]
-
-            }
-
-
             
         ]
     );
@@ -209,7 +140,77 @@ function parse_file () {
 
            ]
        );
-           parse_file();
+       servergraph = $.plot (
+           $("#profitgraph"),
+           [
+               {
+                   label: "Number of Web Servers in North America",
+                   data: data[3],
+                   lines: lines[3],
+                   points: plots[3]
+               },
+
+               {
+                   label: "Number of Web Servers in the European Union",
+                   data: data[4],
+                   lines: lines[4],
+                   points: plots[4]
+
+               },
+
+               {
+                   label: "Number of Web Servers in the Asian Pacific",
+                   data: data[5],
+                   lines: lines[5],
+                   points: lines[5]
+
+               },
+
+               {
+                   label: "Number of Java Servers in the United States",
+                   data: data[6],
+                   lines: lines[6],
+                   points: plots[6]
+
+               },
+               {
+                   label: "Number of Java Servers in the European Union",
+                   data: data[7],
+                   lines: lines[7],
+                   points: plots[7]
+
+               },
+               {
+                   label: "Number of Java Servers in the Asian Pacific",
+                   data: data[8],
+                   lines: lines[8],
+                   points: plots[8]
+
+               },
+               {
+                   label: "Number of Database Servers in the United States",
+                   data: data[9],
+                   lines: lines[9],
+                   points: plots[9]
+
+               },
+               {
+                   label: "Number of Database Servers in the European Union",
+                   data: data[10],
+                   lines: lines[10],
+                   points: plots[10]
+
+               },
+               {
+                   label: "Number of Database Servers in the Asian Pacific",
+                   data: data[11],
+                   lines: lines[11],
+                   points: plots[11]
+
+               }
+           ]
+       );
+       parse_file();
    }
-);
+                    );
 
