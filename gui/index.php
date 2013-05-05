@@ -11,11 +11,13 @@
     <style type="text/css">
       body { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
       #placeholder { width: 900; height: 500; }
+      #servergraph { width: 700; height 400;}
       #profitgraph { width: 500; height: 400; }
     </style>
   </head>
   <body>
     <div id="placeholder"></div>
+    <div id="servergraph"></div>
     <div id="profitgraph"></div>
   </body>
 
