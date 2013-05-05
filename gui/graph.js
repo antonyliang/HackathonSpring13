@@ -42,21 +42,21 @@ function update_plot() {
 }
 
 function update_fromfile () {
-    alert("got into update");
+//    alert("got into update");
     var splitLine = [];
-    alert("made splitline");
-    alert("length of linepos: " + control.linepos + " " + control.lines.length);
+  //  alert("made splitline");
+   // alert("length of linepos: " + control.linepos + " " + control.lines.length);
     while(control.linepos < control.lines.length) {
-        alert("in while");
+        //alert("in while");
         splitLine = control.lines[control.linepos].split(","); //split each line by commas
         for (var n in splitLine) {
-            alert("in for");
+            //alert("in for");
             data[n].push([control.xaxisv, splitLine[n]]);
         }
         control.xaxisv = control.xaxisv + 1;
         control.linepos = control.linepos + 1;
-        alert("values of linepos: " + control.linepos);
-        alert("here is your data:" + data);
+//        alert("values of linepos: " + control.linepos);
+  //      alert("here is your data:" + data);
         update_plot();
     }
 }
@@ -81,9 +81,9 @@ function set_visible(index, yesorno) {
 function parse_file () {
 //    alert("parsing file");
     update_fromfile();
-    alert("this is the data that will be sent" + data);
+//    alert("this is the data that will be sent" + data);
     update_plot();
-    alert("first parse");
+  //  alert("first parse");
     var fi = null;
     while(control.line !== "STOP") {
          fi = read_file();
