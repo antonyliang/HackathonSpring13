@@ -1,11 +1,27 @@
-#Team Midas
+"""
+<client program written for a Morgan Stanley Hackathon>
+    Copyright (C) 2013  Team Midas
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
 import socket
 import math
 import operator
 import os
 import sys
 
-f = open(os.devnull, "w")
+#f = open(os.devnull, "w")
 #sys.stdout = f
 
 #Globals
@@ -419,6 +435,7 @@ def dataLogic(projN, projE, projA):
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
     projections = {"NA": projN, "EU": projE, "AP": projA}
+
     if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) >  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
         currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
@@ -496,20 +513,6 @@ def parseConfig(data):
     ConfigD["NA"] = int(config[6])
     ConfigD["EU"] = int(config[7])
     ConfigD["AP"] = int(config[8])
-    
-
-#Pretty prints a key-value pair in Config
-#x is the tier.region you're looking for
-#e.g. printConfig("W.na") prints the number of servers in the Web tier of North America
-#case-sensitive
-def printConfigW(x):
-    print x + ": " + ConfigW[x]
-
-def printConfigJ(x):
-    print x + ": " + ConfigJ[x]
-
-def printConfigD(x):
-    print x + ": " + ConfigD[x]
 
 #Pretty prints all key-value pairs in Config
 def printAllConfig():
@@ -521,12 +524,12 @@ def printAllConfig():
         print i + " Web: " + str(ConfigW[i]) + " \t" + i + " Java: " + str(ConfigJ[i]) + " \t" + i + " Data: " + str(ConfigD[i])
 
 def main():
-    #towrite = open('data.txt', 'w')
+    towrite = open('data.txt', 'w')
     data = init()
     endnum = 1
     i = 0
     while (data != "END"):
-#    while (i < 2880):
+#   while (i < 2880):
         print "---------------TURN# " + str(i) + "----------------"
         parseConfig(data)
         printAllConfig()
@@ -537,8 +540,8 @@ def main():
         parseDemand(data)
         #printDemand()
         #print str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"])
-        #towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
-        #towrite.flush()
+        towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
+        towrite.flush()
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -568,5 +571,3 @@ def main():
 
 
 main()
-
-print "\nENDED"
