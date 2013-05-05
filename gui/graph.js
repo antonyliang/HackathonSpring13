@@ -184,20 +184,21 @@ function parse_file () {
                 lines: lines[11],
                 points: plots[11]
 
-            },
-
-            {
-                label: "Profit",
-                data: data[12],
-                lines: lines[12],
-                points: plots[12]
-
             }
+
 
             
         ]
     );
 //       alert("starting the process");
+       {
+           label: "Profit",
+           data: data[12],
+           lines: lines[12],
+           points: plots[12]
+           
+       }
+
        parse_file();
    }
 );
