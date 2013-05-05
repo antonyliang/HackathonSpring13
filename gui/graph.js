@@ -42,6 +42,7 @@ function update_plot() {
 }
 
 function update_fromfile () {
+    alert("starting");
 //    alert("got into update");
     var splitLine = [];
   //  alert("made splitline");
@@ -85,7 +86,7 @@ function parse_file () {
     update_plot();
   //  alert("first parse");
     var fi = null;
-    while(control.line !== "STOP") {
+    while(control.lines[control.linepos] !== "END") {
          fi = read_file();
         if(fi !== (undefined || null) && fi !== control.file) {
             //            aletr("YOU'RE RIGGGHHHT");
@@ -93,7 +94,7 @@ function parse_file () {
             control.file = fi;
             control.expand_lines();
             update_fromfile();
-            
+            alert("the current line" + control.lines[control.linepos]);
         }
     }
 }
@@ -202,10 +203,11 @@ function draw_graph() {
                 points: plots[12]
 
             }
+
             
         ]
     );
-    
+       alert("starting the process");
        parse_file();
    }
 );
