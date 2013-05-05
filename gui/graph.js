@@ -59,6 +59,7 @@ function update_fromfile () {
 //        alert("values of linepos: " + control.linepos);
   //      alert("here is your data:" + data);
         update_plot();
+        alert("line:" + control.linepos);
     }
 }
 

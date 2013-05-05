@@ -8,5 +8,5 @@ function read_file () {
             //callback
             file = data;
         }
-    });
+    })
     return file;};
