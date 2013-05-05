@@ -255,8 +255,8 @@ def move():
         projAD2 = calcDemand("AP",secondProjArr)        
         thirdProjArr = projDemand(secondProjArr,projND2,projED2,projAD2)
         projND3 = calcDemand("NA",thirdProjArr)
-        projED3 = calcDemand("NA",thirdProjArr)
-        projAD3 = calcDemand("NA",thirdProjArr)
+        projED3 = calcDemand("EU",thirdProjArr)
+        projAD3 = calcDemand("AP",thirdProjArr)
 
     control = []
     #Web NA
@@ -266,12 +266,12 @@ def move():
     #Web AP
     control.append(webLogic(projAD, projAD2, projAD3, currentCapAW, "AP"))
     #Java NA
-    control.append(javaLogic(projND, currentCapNJ, "NA"))
+    control.append(javaLogic(projND, projND2, projND3, currentCapNJ, "NA"))
     #Java EU
-    control.append(javaLogic(projED, currentCapEJ, "EU"))
+    control.append(javaLogic(projED, projED2, projED3, currentCapEJ, "EU"))
     #Java AP
-    control.append(javaLogic(projAD, currentCapAJ, "AP"))
-    #Data All Regions
+    control.append(javaLogic(projAD, projAD2, projAD3, currentCapAJ, "AP"))
+    #Data NA
     control.append(dataLogic(projND, projED, projAD))
 
     val = "CONTROL"
@@ -381,10 +381,8 @@ def webLogic(proj, proj2, proj3, cap, region):
     
     val = int(math.floor(proj - cap)/190)
     val2 = int(math.floor(proj2 - cap)/190)
-    val3 = int(math.ceil(proj3 - cap)/190)
 
-    ans = 0
-
+    val3 = int(math.floor(proj3 - cap)/190)
     if(ConfigW[region] + val <= 0):
         return (-1*ConfigW[region] + 1)
     if(val2 > 0):
@@ -392,7 +390,7 @@ def webLogic(proj, proj2, proj3, cap, region):
     return val2
 
 #Decisions on Java Servers
-def javaLogic(proj, cap, region):
+def javaLogic(proj, proj2, proj3, cap, region):
     global Revenue
     global J_cost
     global goingUpJava
@@ -405,18 +403,22 @@ def javaLogic(proj, cap, region):
     addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
 
     if(addServer < overflow):
-        val = int(math.ceil(proj - cap)/510)
+        val = int(math.floor(proj - cap)/510)
+        val2 = int(math.floor(proj2 - cap)/510)
+        val3 = int(math.floor(proj3 - cap)/510)
     else:
         val = 0
+        val2 = 0
+        val3 = 0
 
     if (ConfigJ[region] + val <= 0):
         return 0
 
-    if (val > 0):
-        goingUpJava[region][2] = val
+    if (val2 > 0):
+        goingUpJava[region][2] = val2
     else:
-        goingDownJava[region][1] = val
-    return val
+        goingDownJava[region][1] = val2
+    return val2
 
 #Decisions on Databases
 def dataLogic(projN, projE, projA):
@@ -555,8 +557,6 @@ def main():
         print data
         if(endnum <= 2880 and i > endnum):
             endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
-            print "CURRENT ENDNUM"
-            print endnum
             if(endnum >= 2880):
                 endnum = 2880
         i = i+1
