@@ -14,35 +14,35 @@ var lines = new Array();
 var plots = new Array();
 var data = new Array();
 var linegraph = null;
-for(var i = 0; i < 10; i = i + 1) {
-    lines[i] = new Array();
+ for(var i = 0; i < 10; i = i + 1) {
+     lines[i] = new Array();
+  }
+ for(var i = 0; i < 13; i = i + 1) {
+
+     lines[i] = {show: true};
+     plots[i] = {show: true};
+     data[i] = new Array();
+
  }
-for(var i = 0; i < 13; i = i + 1) {
 
-    lines[i] = {show: true};
-    plots[i] = {show: true};
-    data[i] = new Array();
+ // draw_graph();
+ file = read_file();
+ //alert("this should work" + file);
+ if(file != null) {
+     control = new Input(file);
+ }
 
-}
+ function update_data (index, dat) {
+     data[index] = dat;
+ }
+ function update_plot() {
+     linegraph.setData(data);
+     linegraph.setupGrid();
+     linegraph.draw();
+ }
 
-// draw_graph();
-file = read_file();
-//alert("this should work" + file);
-if(file != null) {
-    control = new Input(file);
-}
-
-function update_data (index, dat) {
-    data[index] = dat;
-}
-function update_plot() {
-    linegraph.setData(data);
-    linegraph.setupGrid();
-    linegraph.draw();
-}
-
-function update_fromfile () {
-
+ function update_fromline () {
+     
 }
 
 
