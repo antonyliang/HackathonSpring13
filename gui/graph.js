@@ -14,6 +14,7 @@ var lines = new Array();
 var plots = new Array();
 var data = new Array();
 var linegraph = null;
+var xaxis_val = 1;
  for(var i = 0; i < 10; i = i + 1) {
      lines[i] = new Array();
   }
@@ -41,13 +42,16 @@ var linegraph = null;
      linegraph.draw();
  }
 
- function update_fromline () {
-     
-}
+ function update_fromline (line) {
+     var input = line.split(",");
+     for(var n = 0; n < input.length; n = n +1) {
+         data[n].push([xaxis_val, input[n]]);
+     }
+ }
 
 
-function set_visible(index, yesorno) {
-    if(!yesorno) {
+function set_visible(index, isVisible) {
+    if(!isVisible) {
         lines[index] = {show: false};
         plots[index] = {show: false};
     }
@@ -69,18 +73,7 @@ function parse_file () {
   //  update_plot();
   //  alert("first parse");
     var fi = null;
-    while(control.lines[control.linepos] !== "END") {
-         fi = read_file();
-        if(fi !== (undefined || null) && fi !== control.file) {
-            //            aletr("YOU'RE RIGGGHHHT");
-            // alert("file changed");
-            control.file = fi;
-            control.expand_lines();
-            update_fromfile();
-            alert("the current line" + control.lines[control.linepos]);
-        }
-    }
-}
+    
 function draw_graph() {
     
 }
