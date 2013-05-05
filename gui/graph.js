@@ -86,17 +86,16 @@ function parse_file () {
 //    alert("entering parse");
     while(control.linevals[linepos] !== "END") {
         var fi = read_file(); //keep reloading the file
-        if(fi != null) {
+        if(fi != null && fi != control.file) {
 //            alert("your in if");
             control.file = fi;
             //split line, insert it into chart, then increment position
             control.linevals = fi.split("\n");
-            if(control.linevals[linepos] !== undefined) {
-                update_fromline(control.linevals[linepos]);
+            alert(control.linevals);
+            update_fromline(control.linevals[linepos]);
             linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
             update_plot();
-            }
         }
     }
 }
