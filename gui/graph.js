@@ -84,7 +84,7 @@ function parse_file () {
 
 ("\n");
             update_fromline(control.linevals[linepos]);
-            control.linevals = control.linevals + 1;
+            linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
             update_plot();
         }
