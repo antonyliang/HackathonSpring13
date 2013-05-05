@@ -30,16 +30,6 @@ var linevals = [];
 
  }
 
- // draw_graph();
- file = read_file();
- //alert("this should work" + file);
- if(file != null) {
-     control = new Input(file);
- }
-
- function update_data (index, dat) {
-     data[index] = dat;
- }
  function update_plot() {
      linegraph.setData([data[0], data[1], data[2]]);
      linegraph.setupGrid();
@@ -85,11 +75,8 @@ function parse_file () {
     var fi = null;
     fi = read_file();
     while(fi !== null && fi !== "") {
-        alert("reading from file");
         fi = read_file();
-        alert("read file");
         linevals = fi.split("\n");
-        alert("split file");
         while(linepos < linevals.length) {
             console.log(linepos);
             console.log(linevals.length);
@@ -217,4 +204,3 @@ function parse_file () {
        parse_file();
    }
                     );
-
