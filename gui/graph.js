@@ -60,6 +60,7 @@ var linevals = [];
      for(var n = 0; n < input.length; n = n +1) {
          data[n].push([xaxis_val, input[n]]);
      }
+     update_plot();
  }
 
 
@@ -79,31 +80,23 @@ function set_visible(index, isVisible) {
 //alert("This is control " + control);
 
 function parse_file () {
-//    alert("parsing file");
-//    update_fromfile();
-//    alert("this is the data that will be sent" + data);
-  //  update_plot();
-  //  alert("first parse");
-//    alert("entering parse");
+    alert("parsing");
     var fi = null;
-    while(linevals[linepos] !== "END") {
-         fi = read_file(); //keep reloading the file
-//        alert(fi == control.file);
-        if(fi !== null && fi !== "") {
-//            alert("your in if");
-            alert(linevals[9]);
-            control.file = fi;
-            //split line, insert it into chart, then increment position
-            linevals = control.file.split("\n");
-//            alert(linevals);
-            console.log("linevals " + linevals);
-            console.log("line " + linevals[linepos]);
-            console.log("linepos " + linepos);
+    fi = read_file();
+    while(fi !== null && fi !== "") {
+        alert("reading from file");
+        fi = read_file();
+        alert("read file");
+        linevals = fi.split("\n");
+        alert("split file");
+        while(linepos < linevals.length) {
+            console.log(linepos);
+            console.log(linevals.length);
             update_fromline(linevals[linepos]);
             linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
-            update_plot();
         }
+        alert("done");
     }
 }
    $(document).ready(function () {
