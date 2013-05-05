@@ -372,25 +372,13 @@ def webLogic(proj, proj2, proj3, cap, region):
     val3 = int(math.ceil(proj3 - cap)/190)
 
     ans = 0
-#65653
-#   if(ConfigW[region] + val2 <= 0):
-#       return 0
-#   if(val2 > 0):
-#       goingUpWeb[region][2] = val2
-#   return val
-#65653
-#   if(ConfigW[region] + val <= 0):
-#       return 0
-#   if(val2 > 0):
-#       goingUpWeb[region][2] = val2
-#   return val
-    if(ConfigW[region] + val2 <= 0):
-        return 0
+
     if(ConfigW[region] + val <= 0):
         return 0
-    if(val3>0):
-        goingUpWeb[region][2] = val3
-    return val3
+    if(val2 > 0):
+       goingUpWeb[region][2] = val2
+    return val
+
 #Decisions on Java Servers
 def javaLogic(proj, cap, region):
     global Revenue
@@ -533,7 +521,7 @@ def printAllConfig():
         print i + " Web: " + str(ConfigW[i]) + " \t" + i + " Java: " + str(ConfigJ[i]) + " \t" + i + " Data: " + str(ConfigD[i])
 
 def main():
-    towrite = open('data.txt', 'w')
+    #towrite = open('data.txt', 'w')
     data = init()
     endnum = 1
     i = 0
