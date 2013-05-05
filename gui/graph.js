@@ -72,7 +72,7 @@ function parse_file () {
 //    alert("this is the data that will be sent" + data);
   //  update_plot();
   //  alert("first parse");
-    while(control.linevals[linepos] !== "END") {
+    while(control.linevals[control.linepos] !== "END") {
         var fi = read_file(); //keep reloading the file
         if(fi != null) {
             control.file = fi;
