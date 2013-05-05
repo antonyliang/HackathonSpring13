@@ -90,13 +90,13 @@ function parse_file () {
 //            alert("your in if");
             control.file = fi;
             //split line, insert it into chart, then increment position
-            control.linevals = fi.split
-
-("\n");
-            update_fromline(control.linevals[linepos]);
+            control.linevals = fi.split("\n");
+            if(control.linevals[linepos] !== undefined) {
+                update_fromline(control.linevals[linepos]);
             linepos = linepos + 1;
             xaxis_val = xaxis_val + 1;
             update_plot();
+            }
         }
     }
 }
