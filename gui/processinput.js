@@ -11,4 +11,9 @@ var Input = function (input) {
         return "File: " + this.file + " current line position: " + this.line
         + " split array: " + this.stats;
     };
+
+    //this method expands the lines without compromising position
+    this.expand_lines = function () {
+        this.lines = this.file.split("\n");
+    };
 };

@@ -13,6 +13,7 @@ var control;
 var lines = new Array();
 var plots = new Array();
 var data = new Array();
+var linegraph = null;
 for(var i = 0; i < 10; i = i + 1) {
     lines[i] = new Array();
  }
@@ -31,135 +32,33 @@ if(file != null) {
     control = new Input(file);
 }
 
-var graph = $.plot (
-    $("#placeholder"),
-    [
-        {
-            label: "Demand in the United States",
-            data: data[0],
-            lines: lines[0],
-            points: plots[0]
-
-
-        },
-        {
-            label: "Demand in the European Union",
-            data: data[1],
-            lines: lines[1],
-            points: plots[1]
-        },
-
-        {
-
-            label: "Demand in the Asian Pacific",
-            data: data[2],
-            lines: lines[2],
-            points: plots[2]
-
-        },
-
-
-        {
-            label: "Number of Web Servers in North America",
-            data: data[3],
-            lines: lines[3],
-            points: plots[3]
-        },
-
-        {
-            label: "Number of Web Servers in the European Union",
-            data: data[4],
-            lines: lines[4],
-            points: plots[4]
-
-        },
-
-        {
-            label: "Number of Web Servers in the Asian Pacific",
-            data: data[5],
-            lines: lines[5],
-            points: lines[5]
-
-        },
-
-        {
-            label: "Number of Java Servers in the United States",
-            data: data[6],
-            lines: lines[6],
-            points: plots[6]
-
-        },
-        {
-            label: "Number of Java Servers in the European Union",
-            data: data[7],
-            lines: lines[7],
-            points: plots[7]
-
-        },
-        {
-            label: "Number of Java Servers in the Asian Pacific",
-            data: data[8],
-            lines: lines[8],
-            points: plots[8]
-
-        },
-        {
-            label: "Number of Database Servers in the United States",
-            data: data[9],
-            lines: lines[9],
-            points: plots[9]
-
-        },
-        {
-            label: "Number of Database Servers in the European Union",
-            data: data[10],
-            lines: lines[10],
-            points: plots[10]
-
-        },
-        {
-            label: "Number of Database Servers in the Asian Pacific",
-            data: data[11],
-            lines: lines[11],
-            points: plots[11]
-
-        },
-
-        {
-            label: "Profit",
-            data: data[12],
-            lines: lines[12],
-            points: plots[12]
-
-        }
-        
-    ]
-);
-
 function update_data (index, dat) {
     data[index] = dat;
 }
+function update_plot() {
+    linegraph.setData(data);
+    linegraph.setupGrid();
+    linegraph.draw();
+}
 
 function update_fromfile () {
-    alert("updating from file");
-    var splitdata;
-    var isRunning = true;
+    alert("got into update");
+    var splitLine = [];
+    alert("made splitline");
+    alert("length of linepos: " + control.linepos + " " + control.lines.length);
     while(control.linepos < control.lines.length) {
-        splitdata = control.lines[control.linepos].split(","); //splits current line into comma split array of ints
-        if(splitdata[0] === "STOP") {
-            return false;
+        alert("in while");
+        splitLine = control.lines[control.linepos].split(","); //split each line by commas
+        for (var n in splitLine) {
+            alert("in for");
+            data[n].push([control.xaxisv, splitLine[n]]);
         }
-        for(var i in data) {
-            //alert(splitdata[i]);
-            data[i].push([control.xaxisv, splitdata[i]]);
-        }
-        control.xaxisv += 30;
-        control.linepos += 1;
+        control.xaxisv = control.xaxisv + 1;
+        control.linepos = control.linepos + 1;
+        alert("values of linepos: " + control.linepos);
+        alert("here is your data:" + data);
+        update_plot();
     }
-    graph.setData(data);
-    graph.setUpGrid();
-    graph.draw();
-    return isRunning;
 }
 
 
@@ -173,10 +72,141 @@ function set_visible(index, yesorno) {
         plots[index] = {show: true};
     }
 
-    graph.draw();
+    draw_graph();
 }
 //alert("Now instantiating graph");
 //alert("value of file:" + file);
 //alert("This is control " + control);
 
+function parse_file () {
+//    alert("parsing file");
+    update_fromfile();
+    alert("this is the data that will be sent" + data);
+    update_plot();
+    alert("first parse");
+    var fi = null;
+    while(control.line !== "STOP") {
+         fi = read_file();
+        if(fi !== (undefined || null) && fi !== control.file) {
+            //            aletr("YOU'RE RIGGGHHHT");
+            // alert("file changed");
+            control.file = fi;
+            control.expand_lines();
+            update_fromfile();
+            
+        }
+    }
+}
+function draw_graph() {
+    
+}
+   $(document).ready(function () {
+      linegraph = $.plot (
+        $("#placeholder"),
+        [
+            {
+                label: "Demand in the United States",
+                data: data[0],
+                lines: lines[0],
+                points: plots[0]
+                
+                
+            },
+            {
+                label: "Demand in the European Union",
+                data: data[1],
+                lines: lines[1],
+                points: plots[1]
+            },
+
+            {
+
+                label: "Demand in the Asian Pacific",
+                data: data[2],
+                lines: lines[2],
+                points: plots[2]
+
+            },
+
+
+            {
+                label: "Number of Web Servers in North America",
+                data: data[3],
+                lines: lines[3],
+                points: plots[3]
+            },
+
+            {
+                label: "Number of Web Servers in the European Union",
+                data: data[4],
+                lines: lines[4],
+                points: plots[4]
+
+            },
+
+            {
+                label: "Number of Web Servers in the Asian Pacific",
+                data: data[5],
+                lines: lines[5],
+                points: lines[5]
+
+            },
+
+            {
+                label: "Number of Java Servers in the United States",
+                data: data[6],
+                lines: lines[6],
+                points: plots[6]
+
+            },
+            {
+                label: "Number of Java Servers in the European Union",
+                data: data[7],
+                lines: lines[7],
+                points: plots[7]
+
+            },
+            {
+                label: "Number of Java Servers in the Asian Pacific",
+                data: data[8],
+                lines: lines[8],
+                points: plots[8]
+
+            },
+            {
+                label: "Number of Database Servers in the United States",
+                data: data[9],
+                lines: lines[9],
+                points: plots[9]
+
+            },
+            {
+                label: "Number of Database Servers in the European Union",
+                data: data[10],
+                lines: lines[10],
+                points: plots[10]
+
+            },
+            {
+                label: "Number of Database Servers in the Asian Pacific",
+                data: data[11],
+                lines: lines[11],
+                points: plots[11]
+
+            },
+
+            {
+                label: "Profit",
+                data: data[12],
+                lines: lines[12],
+                points: plots[12]
+
+            }
+            
+        ]
+    );
+    
+       parse_file();
+   }
+);
 
