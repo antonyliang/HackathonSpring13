@@ -5,7 +5,7 @@ import operator
 import os
 import sys
 
-#f = open(os.devnull, "w")
+f = open(os.devnull, "w")
 #sys.stdout = f
 
 #Globals
@@ -39,7 +39,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833 ))
+    s.connect(("hackathon.hopto.org", 27834 ))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -209,15 +209,15 @@ def move():
     global ConfigJ
     global ConfigD
 
-    currentCapNW = float(ConfigW["NA"] * 180)
-    currentCapEW = float(ConfigW["EU"] * 180)
-    currentCapAW = float(ConfigW["AP"] * 180)
-    currentCapNJ = float(ConfigJ["NA"] * 450)
-    currentCapEJ = float(ConfigJ["EU"] * 450)
-    currentCapAJ = float(ConfigJ["AP"] * 450)
-    currentCapND = float(ConfigD["NA"] * 1100)
-    currentCapED = float(ConfigD["EU"] * 1100)
-    currentCapAD = float(ConfigD["AP"] * 1100)
+    currentCapNW = float(ConfigW["NA"] * 190)
+    currentCapEW = float(ConfigW["EU"] * 190)
+    currentCapAW = float(ConfigW["AP"] * 190)
+    currentCapNJ = float(ConfigJ["NA"] * 510)
+    currentCapEJ = float(ConfigJ["EU"] * 510)
+    currentCapAJ = float(ConfigJ["AP"] * 510)
+    currentCapND = float(ConfigD["NA"] * 1200)
+    currentCapED = float(ConfigD["EU"] * 1200)
+    currentCapAD = float(ConfigD["AP"] * 1200)
 
     projND = calcDemand("NA",Demand)
     projED = calcDemand("EU",Demand)
@@ -367,9 +367,9 @@ def webLogic(proj, proj2, proj3, cap, region):
     global goingDownWeb
     global ConfigW
     
-    val = int(math.ceil(proj - cap)/180)
-    val2 = int(math.ceil(proj2 - cap)/180)
-    val3 = int(math.ceil(proj3 - cap)/180)
+    val = int(math.ceil(proj - cap)/190)
+    val2 = int(math.ceil(proj2 - cap)/190)
+    val3 = int(math.ceil(proj3 - cap)/190)
 
     ans = 0
 
@@ -402,7 +402,7 @@ def javaLogic(proj, cap, region):
     addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
 
     if(addServer < overflow):
-        val = int(math.ceil(proj - cap)/450)
+        val = int(math.ceil(proj - cap)/510)
     else:
         val = 0
 
@@ -428,7 +428,7 @@ def dataLogic(projN, projE, projA):
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
     projections = {"NA": projN, "EU": projE, "AP": projA}
-    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1100)  >  projN + projE + projA):
+    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) >  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
         currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
         locations[currentKey]
@@ -437,13 +437,13 @@ def dataLogic(projN, projE, projA):
     else:
         if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
             return "0 0 0"
-        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1100) <  projN + projE + projA):
+        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 500 <  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
             locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
             currentKey = max(locations.iteritems(), key=operator.itemgetter(1))[0]
             locations[currentKey]
             goingDownData[currentKey][2] = 1
             return negval[currentKey]
-
+    
 
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
