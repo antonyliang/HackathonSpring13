@@ -543,9 +543,6 @@ def main():
         print data
         parseDemand(data)
         #printDemand()
-        #print str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"])
-        towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
-        towrite.flush()
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -555,6 +552,8 @@ def main():
         #PROFIT
         data = s.recv(1024)
         print data
+        towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "," + str(ConfigW["NA"]) + "," + str(ConfigW["EU"]) + "," + str(ConfigW["AP"]) + "," + str(ConfigJ["NA"]) + "," + str(ConfigJ["EU"]) + "," + str(ConfigJ["AP"]) + "," + str(ConfigD["NA"]) + "," + str(ConfigD["EU"]) + "," + str(ConfigD["AP"]) + "," + data[-2:]+ "\n")
+        towrite.flush()
         passArrayTime()
         s.send(move())
         print ""
@@ -570,6 +569,7 @@ def main():
         i = i+1
         if(i == 2778):
             sys.stdout = sys.__stdout__
+    to.write("END")
     s.send("STOP")
     s.close()
 
