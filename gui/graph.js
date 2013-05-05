@@ -42,25 +42,7 @@ function update_plot() {
 }
 
 function update_fromfile () {
-    alert("starting");
-//    alert("got into update");
-    var splitLine = [];
-  //  alert("made splitline");
-   // alert("length of linepos: " + control.linepos + " " + control.lines.length);
-    while(control.linepos < control.lines.length) {
-        //alert("in while");
-        splitLine = control.lines[control.linepos].split(","); //split each line by commas
-        for (var n in splitLine) {
-            //alert("in for");
-            data[n].push([control.xaxisv, splitLine[n]]);
-        }
-        control.xaxisv = control.xaxisv + 1;
-        control.linepos = control.linepos + 1;
-//        alert("values of linepos: " + control.linepos);
-  //      alert("here is your data:" + data);
-        update_plot();
-        alert("line:" + control.linepos);
-    }
+
 }
 
 
