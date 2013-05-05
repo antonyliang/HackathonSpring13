@@ -44,8 +44,9 @@ var linepos = 0;
  }
 
  function update_fromline (line) {
-     alert("Here's your line: " + line);
+//     alert("Here's your line: " + line);
      var input = line.split(",");
+  //   alert("Your split: " + input);
      for(var n = 0; n < input.length; n = n +1) {
          data[n].push([xaxis_val, input[n]]);
      }
@@ -73,11 +74,11 @@ function parse_file () {
 //    alert("this is the data that will be sent" + data);
   //  update_plot();
   //  alert("first parse");
-    alert("entering parse");
+//    alert("entering parse");
     while(control.linevals[linepos] !== "END") {
         var fi = read_file(); //keep reloading the file
         if(fi != null) {
-            alert("your in if");
+//            alert("your in if");
             control.file = fi;
             //split line, insert it into chart, then increment position
             control.linevals = fi.split
@@ -196,7 +197,7 @@ function parse_file () {
             
         ]
     );
-       alert("starting the process");
+//       alert("starting the process");
        parse_file();
    }
 );
