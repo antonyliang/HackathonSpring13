@@ -2,6 +2,11 @@
 import socket
 import math
 import operator
+import os
+import sys
+
+#f = open(os.devnull, "w")
+#sys.stdout = f
 
 #Globals
 Revenue = 0
@@ -33,7 +38,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 27832))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -135,7 +140,7 @@ def passArrayTime():
         for j in range(1,len(goingDownJava[i])):
             goingDownJava[i][j-1] = goingDownJava[i][j]
             if (i == 1 or i == 2):
-                ConfigJ[i] = ConfigJ[i] - goingDownJava[i][0]
+                ConfigJ[i] = ConfigJ[i] - goingDownJava[i][j]
             goingDownJava[i][j] = 0
 
         if (goingDownData[i][0] > 0):
@@ -144,7 +149,7 @@ def passArrayTime():
 
         for j in range(1,len(goingDownData[i])):
             goingDownData[i][j-1] = goingDownData[i][j]
-            ConfigD[i] = ConfigD[i] - goingDownData[i][0]
+            ConfigD[i] = ConfigD[i] - goingDownData[i][j]
             goingDownData[i][j] = 0
 
         if (goingUpWeb[i][0] > 0):
@@ -153,7 +158,7 @@ def passArrayTime():
 
         for j in range(1,len(goingUpWeb[i])):
             goingUpWeb[i][j-1] = goingUpWeb[i][j]
-  #          ConfigW[i] = ConfigW[i] + goingUpWeb[i][0]
+            ConfigW[i] = ConfigW[i] + goingUpWeb[i][j]
             goingUpWeb[i][j] = 0
 
         if (goingUpJava[i][0] > 0):
@@ -163,18 +168,18 @@ def passArrayTime():
         for j in range(1,len(goingUpJava[i])):
             goingUpJava[i][j-1] = goingUpJava[i][j]
             if (i == 1 or i == 2):
-                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][0]
+                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][j]
             goingUpJava[i][j] = 0
 
         if (goingUpData[i][0] > 0):
-            ConfigD[i] = ConfigD[i] + goingUpData[i][0]
+            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
             goingUpData[i][0] = 0
 
         for j in range(1,len(goingUpData[i])):
             goingUpData[i][j-1] = goingUpData[i][j]
-            ConfigD[i] = ConfigD[i] + goingUpData[i][0]
+            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
             goingUpData[i][j] = 0
-    printArrays()
+    #printArrays()
 
 #parses cost data and stores it in the respective globals
 def parseCost(data):
@@ -401,7 +406,7 @@ def dataLogic(projN, projE, projA):
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
     projections = {"NA": projN, "EU": projE, "AP": projA}
-    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 200 >  projN + projE + projA):
+    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1100)  >  projN + projE + projA):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
         currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
         locations[currentKey]
@@ -410,7 +415,7 @@ def dataLogic(projN, projE, projA):
     else:
         if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
             return "0 0 0"
-        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) + 600 <  projN + projE + projA):
+        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1100) <  projN + projE + projA):
             locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
             currentKey = max(locations.iteritems(), key=operator.itemgetter(1))[0]
             locations[currentKey]
@@ -507,8 +512,8 @@ def main():
     data = init()
     endnum = 1
     i = 0
-#    while (data != "END"):
-    while (i < 2880):
+    while (data != "END"):
+#    while (i < 2880):
         print "---------------TURN# " + str(i) + "----------------"
         parseConfig(data)
         printAllConfig()
@@ -518,9 +523,9 @@ def main():
         print data
         parseDemand(data)
         #printDemand()
-        print str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"])
-        towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
-        towrite.flush()
+        #print str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"])
+        #towrite.write(str(Demand[len(Demand) - 1]["NA"]) + "," + str(Demand[len(Demand) - 1]["EU"]) + "," + str(Demand[len(Demand) - 1]["AP"]) + "\n")
+        #towrite.flush()
         s.send("RECD")
         #DIST
         data = s.recv(1024)
@@ -543,6 +548,8 @@ def main():
             if(endnum >= 2880):
                 endnum = 2880
         i = i+1
+        if(i == 2778):
+            sys.stdout = sys.__stdout__
     s.send("STOP")
     s.close()
 
