@@ -39,7 +39,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833 ))
+    s.connect(("hackathon.hopto.org", 27835))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -372,22 +372,25 @@ def webLogic(proj, proj2, proj3, cap, region):
     val3 = int(math.ceil(proj3 - cap)/180)
 
     ans = 0
-
-#    if (val3 > 0):
-#        goingUpWeb[region][2] = val3
-#        ans += val3
-#    if (ConfigW[region] + val >= 0):
-#        goingUpWeb[region][2] += val
-#        ans += val
-#    if((ConfigW[region] + val >=0) and (val <= 0)):
-#       ans += val
-
+#65653
+#   if(ConfigW[region] + val2 <= 0):
+#       return 0
+#   if(val2 > 0):
+#       goingUpWeb[region][2] = val2
+#   return val
+#65653
+#   if(ConfigW[region] + val <= 0):
+#       return 0
+#   if(val2 > 0):
+#       goingUpWeb[region][2] = val2
+#   return val
     if(ConfigW[region] + val2 <= 0):
         return 0
-    if(val2 > 0):
-        goingUpWeb[region][2] = val2
-    return val
-
+    if(ConfigW[region] + val <= 0):
+        return 0
+    if(val3>0):
+        goingUpWeb[region][2] = val3
+    return val3
 #Decisions on Java Servers
 def javaLogic(proj, cap, region):
     global Revenue
