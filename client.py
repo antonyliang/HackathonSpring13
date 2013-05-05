@@ -55,7 +55,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27834))
+    s.connect(("hackathon.hopto.org", 27833))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -385,9 +385,16 @@ def webLogic(proj, proj2, proj3, cap, region):
     val2 = int(math.floor(proj2 - cap)/190)
 
     val3 = int(math.floor(proj3 - cap)/190)
+
     if(ConfigW[region] + val <= 0):
         return (-1*ConfigW[region] + 1)
+
     if(val2 > 0):
+        #checks for previous changes
+        for i in range(0, 2):
+            if (goingUpWeb[region][i] != 0):
+                return 0
+        
         goingUpWeb[region][2] = val2
     return val2
 
@@ -404,6 +411,8 @@ def javaLogic(proj, proj2, proj3, cap, region):
     overflow = Revenue*overflowRatio[region][1]*(proj - cap)
     addServer = Revenue*(proj - cap) - (J_cost + (1*J_cost))
 
+    #considers if it is worth it to bother adding a server
+
     if(addServer < overflow):
         val = int(math.floor(proj - cap)/510)
         val2 = int(math.floor(proj2 - cap)/510)
@@ -417,8 +426,15 @@ def javaLogic(proj, proj2, proj3, cap, region):
         return 0
 
     if (val2 > 0):
+        #checks if being added yet
+        for i in range(0, 5):
+            if (goingUpJava[region][i] != 0):
+                return 0
         goingUpJava[region][2] = val2
     else:
+        for i in range(0, 2):
+            if (goingDownJava[region][i] != 0):
+                return 0
         goingDownJava[region][1] = val2
     return val2
 
@@ -433,77 +449,72 @@ def dataLogic(projN, projE, projA):
     global DistD
     global Demand
 
+    #what code sends out depending on which region we turn on or off
 
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
 
-    j = (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] % 3) + 1
-
-    z = 0
     print "TOTAL AMOUNT OF DATABASES: " + str(ConfigD["NA"]) + " " + str(ConfigD["EU"]) + " " + str( ConfigD["AP"])
 
+
     if (ConfigJ["NA"] > ConfigD["NA"] * 2 and ConfigJ["NA"] > 1):
-        print "ADDING TO NA"
+        #checks if being modified already
         for i in range(0, 9):
             if (goingUpData["NA"][i] > 0):
                 return "0 0 0"
+
+        print "ADDING TO NA"
         goingUpData["NA"][8] = 1
-        printArrays()
         return val["NA"]
+
     elif (ConfigJ["EU"] > ConfigD["EU"] * 2 and ConfigJ["EU"] > 1 ):
-        print "ADDING TO EUROPE"
+        #checks for previous changes
         for i in range(0, 9):
             if (goingUpData["EU"][i] > 0):
                 return "0 0 0"
+
+        print "ADDING TO EUROPE"
         goingUpData["EU"][8] = 1
         return val["EU"]
+
     elif (ConfigJ["AP"] > ConfigD["AP"] * 2 and ConfigJ["AP"] > 1 ):
-        print "ADDING TO ASIA"
+        #Checks for previous changes
         for i in range(0, 9):
             if (goingUpData["AP"][i] > 0):
                 return "0 0 0"
+
+        print "ADDING TO ASIA"
         goingUpData["AP"][8] = 1
         return val["AP"]
-
     
-    elif( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) > 1 and ((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) >  (700 + DistD["NA"] + DistD["EU"] + DistD["AP"])):
+    elif( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) > 1 and ((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) >  (1100 + DistD["NA"] + DistD["EU"] + DistD["AP"])):
         print "IN THE REMOVAL"
+
+        #Checks if removal is happening already
         for r in goingDownData:
             for i in range(0,3):
                 if(goingDownData[r][i] != 0):
                     return "0 0 0"
+
         region = min(DistD.iteritems(), key=operator.itemgetter(1))[0]
+        #Checks if the first region has no databases
         if(ConfigD[region] == 0):
+            #if so it selects the second options
             locations = {"NA": DistD["NA"], "EU" : DistD["EU"] , "AP" : DistD["AP"]}
             locations.pop(region)
             region = min(locations.iteritems(), key = operator.itemgetter(1))[0]
+            #Checks if the second region has no databases
             if(ConfigD[region] == 0):
+                locations.pop(region)
+                #if so it uses the third and this will definitely have a database
                 region = locations.keys()[0]
-        print "REMOVING DATABASES RAN AND TOOK FROM: " + region + " CAP: " + str( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) + " Distr: " + str( 700 + DistD["NA"] + DistD["EU"] + DistD["AP"])
+        
+        print "REMOVING DATABASES AND TOOK FROM: " + region + " CAP: " + str( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) + " Distr: " + str( 1100 + DistD["NA"] + DistD["EU"] + DistD["AP"])
         print ""
         goingDownData[region][2] = 1
         return negval[region]
     return "0 0 0"
 
-    """
-    if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) > (Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"])):
-        locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
-        currentKey = max(locations, key=locations.get)
-#        currentKey = min(locations.iteritems(), key=operator.itemgetter(1))[0]
-        locations[currentKey]
-        goingDownData[currentKey][2] = 1
-        return negval[currentKey]
-    else:
-        if (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] == 1):
-            return "0 0 0"
-        if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) <  Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"]):
-            locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
-#            currentKey = max(locations.iteritems(), key=locations.itemgetter(1))[0]
-            currentKey = min(locations, key=locations.get)
-            locations[currentKey]
-            goingUpData[currentKey][8] = 1
-            return val[currentKey]
-"""
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
 def parseDemand(data):
@@ -580,7 +591,6 @@ def main():
     endnum = 1
     i = 0
     while (data != "END"):
-#   while (i < 2880):
         print "---------------TURN# " + str(i) + "----------------"
         parseConfig(data)
         print "NA : " + str(ConfigD["NA"])
@@ -608,13 +618,12 @@ def main():
         #CONFIG
         data = s.recv(1024)
         print data
-        if(endnum <= 2880 and i > endnum):
-            endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
-            if(endnum >= 2880):
-                endnum = 2880
+        #   Uncomment if you want to go forward a set amount of turns
+        #if(endnum <= 2880 and i > endnum):
+        #    endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
+        #    if(endnum >= 2880):
+        #        endnum = 2880
         i = i+1
-        if(i == 2778):
-            sys.stdout = sys.__stdout__
     towrite.write("END")
     s.send("STOP")
     s.close()
