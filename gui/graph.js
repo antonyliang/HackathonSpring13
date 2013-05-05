@@ -46,7 +46,10 @@ var linepos = 0;
      profitgraph.setData([data[12]]);
      profitgraph.setupGrid();
      profitgraph.draw();
-     servergraph();
+     servergraph.setData([data[3], data[4], data [5], data[6],
+                         data[7], data[8], data[9], data[10], data[11]]);
+     servergraph.setupGrid();
+     servergraph.draw();
  }
 
  function update_fromline (line) {
