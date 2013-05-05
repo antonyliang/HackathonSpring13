@@ -145,7 +145,7 @@ function parse_file () {
            ]
        );
        servergraph = $.plot (
-           $("#profitgraph"),
+           $("#servergraph"),
            [
                {
                    label: "Number of Web Servers in North America",
