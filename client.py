@@ -1,5 +1,5 @@
 """
-<client program written for a Morgan Stanley Hackathon>
+<A basic resource allocation program written for a Morgan Stanley Hackathon>
     Copyright (C) 2013  Team Midas
 
     This program is free software: you can redistribute it and/or modify
@@ -394,7 +394,7 @@ def webLogic(proj, proj2, proj3, cap, region):
         for i in range(0, 2):
             if (goingUpWeb[region][i] != 0):
                 return 0
-        
+
         goingUpWeb[region][2] = val2
     return val2
 
@@ -618,7 +618,7 @@ def main():
         #CONFIG
         data = s.recv(1024)
         print data
-        #   Uncomment if you want to go forward a set amount of turns
+        #   Uncomment if you want to go forward a set amount of turns instead of it just blazing buy
         #if(endnum <= 2880 and i > endnum):
         #    endnum = i - 1 + int(raw_input("Run how many turns more? Enter 2880 to run til end\n"))
         #    if(endnum >= 2880):
