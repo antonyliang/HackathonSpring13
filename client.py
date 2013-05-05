@@ -151,51 +151,53 @@ def passArrayTime():
 
     for i in ["NA", "EU", "AP"]:
         if (goingDownJava[i][0] > 0 ):
-            ConfigJ[i] = ConfigJ[i] - goingDownJava[i][0]
+#            ConfigJ[i] = ConfigJ[i] - goingDownJava[i][0]
             goingDownJava[i][0] = 0
 
         for j in range(1,len(goingDownJava[i])):
             goingDownJava[i][j-1] = goingDownJava[i][j]
-            if (i == 1 or i == 2):
-                ConfigJ[i] = ConfigJ[i] - goingDownJava[i][j]
+#            if (i == 1 or i == 2):
+#                ConfigJ[i] = ConfigJ[i] - goingDownJava[i][j]
             goingDownJava[i][j] = 0
 
         if (goingDownData[i][0] > 0):
-            ConfigD[i] = ConfigD[i] - goingDownData[i][0]
+#            ConfigD[i] = ConfigD[i] - goingDownData[i][0]
             goingDownData[i][0] = 0
 
         for j in range(1,len(goingDownData[i])):
             goingDownData[i][j-1] = goingDownData[i][j]
-            ConfigD[i] = ConfigD[i] - goingDownData[i][j]
+           # ConfigD[i] = ConfigD[i] - goingDownData[i][j]
             goingDownData[i][j] = 0
 
         if (goingUpWeb[i][0] > 0):
-            ConfigW[i] = ConfigW[i] + goingUpWeb[i][0]
+#            ConfigW[i] = ConfigW[i] + goingUpWeb[i][0]
             goingUpWeb[i][0] = 0
 
         for j in range(1,len(goingUpWeb[i])):
             goingUpWeb[i][j-1] = goingUpWeb[i][j]
-            ConfigW[i] = ConfigW[i] + goingUpWeb[i][j]
+#            ConfigW[i] = ConfigW[i] + goingUpWeb[i][j]
             goingUpWeb[i][j] = 0
 
         if (goingUpJava[i][0] > 0):
-            ConfigJ[i] = ConfigJ[i] + goingUpJava[i][0]
+#            ConfigJ[i] = ConfigJ[i] + goingUpJava[i][0]
             goingUpJava[i][0] = 0
 
         for j in range(1,len(goingUpJava[i])):
             goingUpJava[i][j-1] = goingUpJava[i][j]
-            if (i == 1 or i == 2):
-                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][j]
+#            if (i == 1 or i == 2):
+#                ConfigJ[i] = ConfigJ[i] + goingUpJava[i][j]
             goingUpJava[i][j] = 0
 
         if (goingUpData[i][0] > 0):
-            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
+#            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
             goingUpData[i][0] = 0
 
         for j in range(1,len(goingUpData[i])):
             goingUpData[i][j-1] = goingUpData[i][j]
-            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
+#            ConfigD[i] = ConfigD[i] + goingUpData[i][j]
             goingUpData[i][j] = 0
+
+
     #printArrays()
 
 #parses cost data and stores it in the respective globals
@@ -431,9 +433,59 @@ def dataLogic(projN, projE, projA):
     global DistD
     global Demand
 
+
     val = {"NA": "1 0 0", "EU": "0 1 0", "AP": "0 0 1"}
     negval = {"NA": "-1 0 0", "EU": "0 -1 0", "AP": "0 0 -1"}
-    projections = {"NA": projN, "EU": projE, "AP": projA}
+
+    j = (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] % 3) + 1
+
+    z = 0
+    print "TOTAL AMOUNT OF DATABASES: " + str(ConfigD["NA"]) + " " + str(ConfigD["EU"]) + " " + str( ConfigD["AP"])
+
+    if (ConfigJ["NA"] > ConfigD["NA"] * 2 and ConfigJ["NA"] > 1):
+        print "ADDING TO NA"
+        for i in range(0, 9):
+            if (goingUpData["NA"][i] > 0):
+                return "0 0 0"
+        goingUpData["NA"][8] = 1
+        printArrays()
+        return val["NA"]
+    elif (ConfigJ["EU"] > ConfigD["EU"] * 2 and ConfigJ["EU"] > 1 ):
+        print "ADDING TO EUROPE"
+        for i in range(0, 9):
+            if (goingUpData["EU"][i] > 0):
+                return "0 0 0"
+        goingUpData["EU"][8] = 1
+        return val["EU"]
+    elif (ConfigJ["AP"] > ConfigD["AP"] * 2 and ConfigJ["AP"] > 1 ):
+        print "ADDING TO ASIA"
+        for i in range(0, 9):
+            if (goingUpData["AP"][i] > 0):
+                return "0 0 0"
+        goingUpData["AP"][8] = 1
+        return val["AP"]
+
+    
+    elif( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) > 1 and ((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) >  (700 + DistD["NA"] + DistD["EU"] + DistD["AP"])):
+        print "IN THE REMOVAL"
+        for r in goingDownData:
+            for i in range(0,3):
+                if(goingDownData[r][i] != 0):
+                    return "0 0 0"
+        region = min(DistD.iteritems(), key=operator.itemgetter(1))[0]
+        if(ConfigD[region] == 0):
+            locations = {"NA": DistD["NA"], "EU" : DistD["EU"] , "AP" : DistD["AP"]}
+            locations.pop(region)
+            region = min(locations.iteritems(), key = operator.itemgetter(1))[0]
+            if(ConfigD[region] == 0):
+                region = locations.keys()[0]
+        print "REMOVING DATABASES RAN AND TOOK FROM: " + region + " CAP: " + str( (ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"]) * 1200) + " Distr: " + str( 700 + DistD["NA"] + DistD["EU"] + DistD["AP"])
+        print ""
+        goingDownData[region][2] = 1
+        return negval[region]
+    return "0 0 0"
+
+    """
     if((ConfigD["NA"] + ConfigD["EU"] + ConfigD["AP"] * 1200) > (Demand[len(Demand) - 1]["NA"] + Demand[len(Demand) - 1]["EU"] + Demand[len(Demand) - 1]["AP"])):
         locations = { "NA" : ConfigD["NA"], "EU" : ConfigD["EU"], "AP" : ConfigD["AP"]}
         currentKey = max(locations, key=locations.get)
@@ -451,7 +503,7 @@ def dataLogic(projN, projE, projA):
             locations[currentKey]
             goingUpData[currentKey][8] = 1
             return val[currentKey]
-
+"""
 #parses demand data and stores it in global Demand
 #global Demand will later be used to predict future demand
 def parseDemand(data):
@@ -531,6 +583,7 @@ def main():
 #   while (i < 2880):
         print "---------------TURN# " + str(i) + "----------------"
         parseConfig(data)
+        print "NA : " + str(ConfigD["NA"])
         printAllConfig()
         s.send("RECD")
         #DEMAND
