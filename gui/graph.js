@@ -14,6 +14,8 @@ var lines = new Array();
 var plots = new Array();
 var data = new Array();
 var linegraph = null;
+var profitgraph = null;
+var servergraph = null;
 var xaxis_val = 1;
 var linepos = 0;
  for(var i = 0; i < 10; i = i + 1) {
@@ -191,15 +193,20 @@ function parse_file () {
         ]
     );
 //       alert("starting the process");
-       {
-           label: "Profit",
-           data: data[12],
-           lines: lines[12],
-           points: plots[12]
-           
-       }
+       profitgraph = $.plot (
+           $("#profitgraph"),
+           [
+               {
+                   label: "Profit",
+                   data: data[12],
+                   lines: lines[12],
+                   points: plots[12]
+                   
+               }
 
-       parse_file();
+           ]
+       );
+           parse_file();
    }
 );
 
