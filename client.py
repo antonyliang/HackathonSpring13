@@ -55,7 +55,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def init():
     initArrays()
     global s
-    s.connect(("hackathon.hopto.org", 27833))
+    s.connect(("hackathon.hopto.org", 63335))
     s.send("INIT Midas")
     data = s.recv(1024)
     print data
@@ -389,14 +389,15 @@ def webLogic(proj, proj2, proj3, cap, region):
     if(ConfigW[region] + val <= 0):
         return (-1*ConfigW[region] + 1)
 
-    if(val2 > 0):
+#replaced val2 with val
+    if(val > 0):
         #checks for previous changes
         for i in range(0, 2):
             if (goingUpWeb[region][i] != 0):
                 return 0
 
-        goingUpWeb[region][2] = val2
-    return val2
+        goingUpWeb[region][2] = val
+    return val
 
 #Decisions on Java Servers
 def javaLogic(proj, proj2, proj3, cap, region):
@@ -424,19 +425,19 @@ def javaLogic(proj, proj2, proj3, cap, region):
 
     if (ConfigJ[region] + val <= 0):
         return 0
-
-    if (val2 > 0):
+#replaced val2 with val
+    if (val > 0):
         #checks if being added yet
         for i in range(0, 5):
             if (goingUpJava[region][i] != 0):
                 return 0
-        goingUpJava[region][2] = val2
+        goingUpJava[region][2] = val
     else:
         for i in range(0, 2):
             if (goingDownJava[region][i] != 0):
                 return 0
-        goingDownJava[region][1] = val2
-    return val2
+        goingDownJava[region][1] = val
+    return val
 
 #Decisions on Databases
 def dataLogic(projN, projE, projA):
